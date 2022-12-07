@@ -56,7 +56,7 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        if ($user->can('update-role')){
+        if ($user->can('update-roles')){
             return $role->name != 'Human Resource Manager';
         }
         return false;
@@ -71,7 +71,7 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        if ($user->can('delete-role')){
+        if ($user->can('delete-roles')){
             return $role->name != 'Human Resource Manager';
         }
         return false;

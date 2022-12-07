@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\Permission;
 use Illuminate\Http\Request;
-use App\Models\Role;
+use Illuminate\Validation\Rule;
 
 class RoleController extends Controller
 {
@@ -65,15 +66,17 @@ class RoleController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'string|required',
+            'name' => 'string|required|unique:roles,name',
         ]);
 
         $permit = $request->collect()
-                          ->except(['_token', 'name'])
+                          ->except(['_token', 'name', 'submit'])
                           ->keys();
 
         $newRoles = Role::create($validated);
-        $newRoles->hasPermissionTo($permit);
+        foreach ($permit as $permit_id){
+            $newRoles->givePermissionTo($permit_id);
+        }
 
         return redirect('roles')->with('success', 'Role Created Successfully');
     }
@@ -86,7 +89,15 @@ class RoleController extends Controller
      */
     public function show(Request $request, Role $role)
     {
-        //
+        if ($request->user()->cannot('view-roles')){
+            return redirect('/home')->with('warning', 'Not Authorized');
+        }
+
+        return view('roles.show', [
+            'title' => 'Roles Information',
+            'role' => $role,
+            'permissions' => $role->permissions,
+        ]);
     }
 
     /**
@@ -97,7 +108,16 @@ class RoleController extends Controller
      */
     public function edit(Request $request, Role $role)
     {
-        //
+        if ($request->user()->cannot('update-roles')){
+            return redirect('/roles')->with('warning', 'Not Authorized');
+        }
+
+        return view('roles.edit', [
+            'title' => 'Edit Role',
+            'role' => $role,
+            'old_permit' => collect($role->permissions),
+            'permissions' => Permission::all(),
+        ]);
     }
 
     /**
@@ -109,7 +129,27 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+        if ($request->user()->cannot('update-roles')){
+            return redirect('/roles')->with('warning', 'Not Authorized');
+        }
+
+        $validated = $request->validate([
+            'name' => ['string', 
+                       'required', 
+                       Rule::unique('roles')->ignore($role->id),
+                    ],
+        ]);
+
+        $permit = $request->collect()
+                          ->except(['_token', 'name', 'submit', '_method'])
+                          ->keys();
+
+        $permissions = Permission::whereIn('id', $permit)->get();
+
+        $role->update($validated);
+        $role->syncPermissions($permissions);
+
+        return redirect('roles')->with('success', 'Role Updated Successfully');
     }
 
     /**
@@ -120,6 +160,13 @@ class RoleController extends Controller
      */
     public function destroy(Request $request, Role $role)
     {
-        //
+        if ($request->user()->cannot('delete', $role)){
+            return redirect('/roles')->with('warning', 'Not Authorized');
+        }
+
+        $role->permissions()->detach();
+        $role->delete();
+        
+        return redirect('roles')->with('success', 'Roles deleted Successfully');
     }
 }

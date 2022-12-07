@@ -53,7 +53,18 @@
               <a href="/roles/{{ $role->id }}/edit" class="btn bg-warning"><i class="fas fa-edit"></i></a>
               @endcan
               @can('delete', $role)
-              <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete" theme="danger"/>
+              <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $role->id }}" theme="danger"/>
+              <form method="post" action="/roles/{{ $role->id }}">
+                <x-adminlte-modal id="modalDelete{{ $role->id }}" title="Delete Role" theme="teal"
+                    icon="fas fa-bolt" size='lg' disable-animations>
+                    Are you sure?
+                      @csrf @method('delete')
+                      <x-slot name="footerSlot">
+                        <x-adminlte-button type="submit" name="submit" class="mr-auto" theme="success" label="Accept"/>
+                        <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal"/>
+                    </x-slot>
+                </x-adminlte-modal>
+                </form>
               @endcan
           </div>
           </td>
@@ -65,15 +76,5 @@
   <!-- /.card-body -->
 </div>
 
-<x-adminlte-modal id="modalDelete" title="Delete Role" theme="teal"
-    icon="fas fa-bolt" size='lg' disable-animations>
-    Are you sure?
-    <form method="post" action="/roles/{{ $role->id }}">
-      @csrf @method('delete')
-      <button type="submit" class="btn bg-danger">
-        Delete
-      </button>
-      <x-adminlte-button theme="danger" label="Cancel" data-dismiss="modal"/>
-    </form>
-</x-adminlte-modal>
+
 @endsection

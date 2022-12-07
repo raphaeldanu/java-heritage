@@ -23,15 +23,16 @@
 
 @section('content')
 <x-adminlte-card theme="teal" theme-mode="outline">
-  <form action="{{ url('roles') }}" method="POST">
+  <form action="{{ url('roles/'.$role->id) }}" method="POST">
     @csrf
-    <x-adminlte-input name="name" label="Role Name" type="text" id="name" placeholder="Role Name" enable-old-support/>
-    <label for="">Permission</label>
+    @method('PUT')
+    <x-adminlte-input name="name" label="Role Name" type="text" id="name" placeholder="Role Name" value="{{ $role->name }}" enable-old-support/>
+    <label>Permission</label>
     <div class="row">
       @foreach ($permissions as $item) 
       <div class="form-group col-sm-3">
         <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="{{ $item->id }}" name="{{ $item->id }}" @checked(old($item->id))>
+          <input type="checkbox" class="custom-control-input" id="{{ $item->id }}" name="{{ $item->id }}" @if ($role->permissions->contains('id', $item->id)) checked @endif>
           <label class="custom-control-label" for="{{ $item->id }}">{{ Str::headline($item->name) }}</label>
         </div>
       </div>
