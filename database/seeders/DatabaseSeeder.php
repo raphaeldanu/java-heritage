@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $user = User::create([
             'username' => 'raphaeldanu',
             'password' => Hash::make('12345678'),
+            'active' => 1
         ]);
 
         $permissions = [
@@ -35,6 +36,12 @@ class DatabaseSeeder extends Seeder
             'create-roles',
             'update-roles',
             'delete-roles',
+            'view-users',
+            'create-users',
+            'update-users',
+            'delete-users',
+            'activate-users',
+            'change-password-users',
         ];
         $superAdmin = Role::create(['name' => 'Human Resource Manager']);
 

@@ -19,8 +19,6 @@
 </div><!-- /.container-fluid -->
 @endsection
 
-@section('plugins.BootstrapSwitch', true)
-
 @section('content')
 <x-adminlte-card theme="teal" theme-mode="outline">
   <form action="{{ url('roles') }}" method="POST">

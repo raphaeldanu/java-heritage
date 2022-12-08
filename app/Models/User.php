@@ -39,11 +39,54 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'active' => 'boolean',
     ];
 
     public function adminlte_profile_url()
     {
         return 'profile/username';
     }
+    
+    public function changeStatus()
+    {
+        if ($this->active){
+            $this->active = false;
+        } else {
+            $this->active = true;
+        }
+        $this->save();
+    }
+
+    /**
+     * Scope a query to filter when searching
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilters($query, array $filters)
+    {
+        $query->when($filters['search'] ?? false, fn($query, $search) =>
+            $query->where('username', 'like', '%' . $search . '%')
+        );
+
+        $query->when($filters['status'] ?? false, fn ($query, $status) =>
+            $query->where('active', $status)
+        );
+
+        $query->when($filters['role'] ?? false, fn($query, $role) =>
+            $query->whereHas('roles', fn($query) => 
+                $query->where('id', $role)
+            )
+        );
+    }
+
+    /**
+     * Get the role
+     *
+     * @return Role
+     */
+    public function role()
+    {
+        return $this->roles()->first();
+    }       
 }

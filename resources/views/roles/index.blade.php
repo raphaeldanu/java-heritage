@@ -26,13 +26,23 @@
         <a href="{{ url('roles/create') }}" class="btn btn-primary">Create New Role</a>
       @endcan
     </div>
-
     <div class="card-tools">
       {{ $roles->links() }}
     </div>
   </div>
   <!-- /.card-header -->
   <div class="card-body p-0">
+    <form action="{{ url('roles') }}">
+      <div class="row">
+        <div class="col-11 pr-0">
+          <input type="text" name="search" class="form-control" placeholder="Search roles" value="{{ request('search') }}">
+        </div>
+        <div class="col-1 pl-0">
+          <x-adminlte-button type="submit" icon="fas fa-search" theme="info" class="float-right" class="btn-block"/>
+        </div>
+      </div>
+    </form>
+    @if ($roles->isNotEmpty())
     <table class="table">
       <thead>
         <tr>
@@ -60,8 +70,8 @@
                     Are you sure?
                       @csrf @method('delete')
                       <x-slot name="footerSlot">
-                        <x-adminlte-button type="submit" name="submit" class="mr-auto" theme="success" label="Accept"/>
-                        <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal"/>
+                        <x-adminlte-button type="submit" name="submit" class="mr-auto" theme="success" label="Yes"/>
+                        <x-adminlte-button theme="danger" label="No" data-dismiss="modal"/>
                     </x-slot>
                 </x-adminlte-modal>
                 </form>
@@ -72,6 +82,11 @@
         @endforeach 
       </tbody>
     </table>
+    @else
+    <dt class="p-3">
+      Roles Not Found
+    </dt>
+    @endif
   </div>
   <!-- /.card-body -->
 </div>

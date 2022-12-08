@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\Permission;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\StoreRoleRequest;
+use App\Http\Requests\UpdateRoleRequest;
 
 class RoleController extends Controller
 {
@@ -27,12 +28,12 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         if ($request->user()->cannot('view-roles')){
-            return redirect('/home')->with('warning', 'Not Authorized');
+            return redirectNotAuthorized('/home');
         }
 
         return view('roles.index', [
             'title' => 'Roles Management',
-            'roles' => Role::paginate(15),
+            'roles' => Role::search(request('search'))->paginate(15)->withQueryString(),
         ]);
     }
 
@@ -44,7 +45,7 @@ class RoleController extends Controller
     public function create(Request $request)
     {
         if ($request->user()->cannot('create-roles')){
-            return redirect('/roles')->with('warning', 'Not Authorized');
+            return redirectNotAuthorized('/roles');
         }
 
         return view('roles.create', [
@@ -59,15 +60,9 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
-        if ($request->user()->cannot('create-roles')){
-            return redirect('/roles')->with('warning', 'Not Authorized');
-        }
-
-        $validated = $request->validate([
-            'name' => 'string|required|unique:roles,name',
-        ]);
+        $validated = $request->validated();
 
         $permit = $request->collect()
                           ->except(['_token', 'name', 'submit'])
@@ -90,7 +85,7 @@ class RoleController extends Controller
     public function show(Request $request, Role $role)
     {
         if ($request->user()->cannot('view-roles')){
-            return redirect('/home')->with('warning', 'Not Authorized');
+            return redirectNotAuthorized('/home');
         }
 
         return view('roles.show', [
@@ -127,18 +122,9 @@ class RoleController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
-        if ($request->user()->cannot('update-roles')){
-            return redirect('/roles')->with('warning', 'Not Authorized');
-        }
-
-        $validated = $request->validate([
-            'name' => ['string', 
-                       'required', 
-                       Rule::unique('roles')->ignore($role->id),
-                    ],
-        ]);
+        $validated = $request->validated();
 
         $permit = $request->collect()
                           ->except(['_token', 'name', 'submit', '_method'])
