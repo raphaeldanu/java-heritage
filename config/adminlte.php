@@ -321,6 +321,14 @@ return [
             'can' => 'view-users',
             'active' => ['users*'],
         ],
+        ['header' => 'ORGANIZATIONAL'],
+        [
+            'text' => 'Department',
+            'url'  => 'departments',
+            'icon' => 'fas fa-users-cog',
+            'can' => 'view-departments',
+            'active' => ['departments*'],
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'change_password',

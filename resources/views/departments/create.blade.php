@@ -11,7 +11,7 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('roles.index') }}">Roles</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('departments.index') }}">Department</a></li>
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
@@ -21,20 +21,9 @@
 
 @section('content')
 <x-adminlte-card theme="teal" theme-mode="outline">
-  <form action="{{ route('roles.store') }}" method="POST">
+  <form action="{{ route('departments.store') }}" method="POST">
     @csrf
-    <x-adminlte-input name="name" label="Role Name" type="text" id="name" placeholder="Role Name" enable-old-support/>
-    <label for="">Permission</label>
-    <div class="row">
-      @foreach ($permissions as $item) 
-      <div class="form-group col-sm-3">
-        <div class="custom-control custom-switch">
-          <input type="checkbox" class="custom-control-input" id="{{ $item->id }}" name="{{ $item->id }}" @checked(old($item->id))>
-          <label class="custom-control-label" for="{{ $item->id }}">{{ Str::headline($item->name) }}</label>
-        </div>
-      </div>
-      @endforeach
-    </div>
+    <x-adminlte-input name="name" label="Department Name" type="text" id="name" placeholder="Department Name" enable-old-support/>
     <x-adminlte-button type="submit" label="Submit" theme="primary" class="d-flex ml-auto" name="submit"/>
   </form>
 </x-adminlte-card>

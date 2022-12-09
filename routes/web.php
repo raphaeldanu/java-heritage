@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DepartmentController;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -34,9 +35,13 @@ Route::get('/home', function() {
     return view('home');
 })->name('home')->middleware('auth');
 
+// Users Routes 
 Route::put('users/{user}/change-status', [UserController::class, 'changeStatus'])->name('users.change-status');
 Route::put('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
+
 Route::resources([
     'roles' => RoleController::class,
     'users' => UserController::class,
+    'departments' => DepartmentController::class,
+    
 ]);

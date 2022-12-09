@@ -10,17 +10,6 @@ class UserPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAny(User $user)
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
@@ -74,7 +63,7 @@ class UserPolicy
     public function delete(User $user, User $model)
     {
         if ($user->can('delete-users')){
-            return $user->id != $model->id;
+            return ($user->id != $model->id) and ($model->hasRole('Human Resource Manager' ? $user->hasRole('Human Resource Manager') : true));
         }
         return false;
     }
