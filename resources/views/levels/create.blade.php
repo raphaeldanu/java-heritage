@@ -11,19 +11,19 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('departments.index') }}">Department</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('levels.index') }}">Employee Level</a></li>
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
   </div><!-- /.row -->
 </div><!-- /.container-fluid -->
 @endsection
+
 @section('content')
 <x-adminlte-card theme="teal" theme-mode="outline">
-  <form action="{{ route('departments.update', ['department' => $department]) }}" method="POST">
+  <form action="{{ route('levels.store') }}" method="POST">
     @csrf
-    @method('PUT')
-    <x-adminlte-input name="name" label="Department Name" type="text" id="name" placeholder="Department Name" value="{{ $department->name }}" enable-old-support/>
+    <x-adminlte-input name="name" label="Employee Level Name" type="text" id="name" placeholder="Employee Level Name" enable-old-support/>
     <x-adminlte-button type="submit" label="Submit" theme="primary" class="d-flex ml-auto" name="submit"/>
   </form>
 </x-adminlte-card>

@@ -18,8 +18,8 @@ class Role extends SpatieRole
      */
     public function scopeSearch($query, $keyword)
     {
-        $query->when($keyword ?? false, function($query, $keyword) {
-            $query->where('name', 'like', '%' . $keyword . '%');
-        });
+        $query->when($keyword ?? false, fn($query, $keyword) =>
+            $query->where('name', 'like', '%' . $keyword . '%')
+        );
     }
 }

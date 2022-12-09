@@ -22,52 +22,52 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-departments')
-        <a href="{{ route('departments.create') }}" class="btn btn-primary">Create New Department</a>
+      @can('create-levels')
+        <a href="{{ route('levels.create') }}" class="btn btn-primary">Create New Employee Level</a>
       @endcan
     </div>
     <div class="card-tools">
-      {{ $departments->links() }}
+      {{ $levels->links() }}
     </div>
   </div>
   <!-- /.card-header -->
   <div class="card-body p-0">
-    <form action="{{ route('departments.index') }}">
+    <form action="{{ route('levels.index') }}">
       <div class="row">
         <div class="col-11 pr-0">
-          <input type="text" name="search" class="form-control" placeholder="Search department" value="{{ request('search') }}">
+          <input type="text" name="search" class="form-control" placeholder="Search level" value="{{ request('search') }}">
         </div>
         <div class="col-1 pl-0">
           <x-adminlte-button type="submit" icon="fas fa-search" theme="info" class="float-right" class="btn-block"/>
         </div>
       </div>
     </form>
-    @if ($departments->isNotEmpty())
+    @if ($levels->isNotEmpty())
     <table class="table">
       <thead>
         <tr>
           <th style="width: 10px">#</th>
-          <th>Department Name</th>
+          <th>Role Name</th>
           <th class="col-2 text-center">Action</th>
         </tr>
       </thead>
       <tbody>
-        @foreach ($departments as $department)
+        @foreach ($levels as $level)
         <tr>
           <td>{{ $loop->iteration }}</td>
-          <td>{{ $department->name }}</td>
+          <td>{{ $level->name }}</td>
           <td>
             <div class="d-flex justify-content-around align-items-center">
-              <a href="{{ route('departments.show', ['department' => $department]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
-              @can('update', $department)
-              <a href="{{ route('departments.edit', ['department' => $department]) }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
+              <a href="{{ route('levels.show', ['level' => $level]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
+              @can('update', $level)
+              <a href="{{ route('levels.edit', ['level' => $level]) }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
               @endcan
-              @can('delete', $department)
-              <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $department->id }}" theme="danger"/>
-              <form method="post" action="{{ route('departments.destroy', ['department' => $department]) }}">
-                <x-adminlte-modal id="modalDelete{{ $department->id }}" title="Delete Role" theme="teal"
+              @can('delete', $level)
+              <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $level->id }}" theme="danger"/>
+              <form method="post" action="{{ route('levels.destroy', ['level' => $level]) }}">
+                <x-adminlte-modal id="modalDelete{{ $level->id }}" title="Delete Role" theme="teal"
                     icon="fas fa-bolt" size='lg' disable-animations>
-                    Are you sure you want to delete {{ $department->name }}?
+                    Are you sure you want to delete {{ $level->name }}?
                       @csrf @method('delete')
                       <x-slot name="footerSlot">
                         <x-adminlte-button type="submit" name="submit" class="mr-auto" theme="success" label="Yes"/>
@@ -84,7 +84,7 @@
     </table>
     @else
     <dt class="p-3">
-      Department Not Found
+      Employee Level Not Found
     </dt>
     @endif
   </div>

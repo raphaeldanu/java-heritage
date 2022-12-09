@@ -46,6 +46,10 @@ class DatabaseSeeder extends Seeder
             'create-departments',
             'update-departments',
             'delete-departments',
+            'view-levels',
+            'create-levels',
+            'update-levels',
+            'delete-levels',
         ];
         $superAdmin = Role::create(['name' => 'Human Resource Manager']);
 

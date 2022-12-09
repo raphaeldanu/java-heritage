@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LevelController;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -43,5 +44,5 @@ Route::resources([
     'roles' => RoleController::class,
     'users' => UserController::class,
     'departments' => DepartmentController::class,
-    
+    'levels' => LevelController::class,
 ]);

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Department extends Model
+class Level extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -18,14 +18,14 @@ class Department extends Model
     protected $guarded = ['id'];
 
     /**
-     * Scope a query to search department by name
+     * Scope a query to search level by name.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return void
      */
     public function scopeSearch($query, $keyword)
     {
-        $query->when($keyword ?? false, fn($query, $keyword) => 
+        $query->when($keyword ?? false, fn($query, $keyword) =>
             $query->where('name', 'like', '%' . $keyword . '%')
         );
     }

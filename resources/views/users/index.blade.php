@@ -22,7 +22,7 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-roles')
+      @can('create-users')
         <a href="{{ url('users/create') }}" class="btn btn-primary">Create New User</a>
       @endcan
     </div>
@@ -128,7 +128,7 @@
     </table>
     @else
     <dt class="p-3">
-      Roles Not Found
+      Users Not Found
     </dt>
     @endif
   </div>

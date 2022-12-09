@@ -12,6 +12,16 @@ use function Pest\Laravel\delete;
 class DepartmentController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -24,7 +34,7 @@ class DepartmentController extends Controller
 
         return view('departments.index', [
             'title' => "Departments",
-            'departments' => Department::paginate(15),
+            'departments' => Department::search(request('search'))->paginate(15)->withQueryString(),
         ]);
     }
 
@@ -85,7 +95,7 @@ class DepartmentController extends Controller
      */
     public function edit(Request $request, Department $department)
     {
-        if ($request->user()->cannot('edit-departments')) {
+        if ($request->user()->cannot('update', $department)) {
             return redirectNotAuthorized('departments');
         }
 
@@ -120,7 +130,7 @@ class DepartmentController extends Controller
      */
     public function destroy(Request $request, Department $department)
     {
-        if ($request->user()->cannot('delete-departments')) {
+        if ($request->user()->cannot('delete', $department)) {
             return redirectNotAuthorized('departments');
         }
 

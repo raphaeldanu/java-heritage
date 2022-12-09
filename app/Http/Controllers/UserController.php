@@ -67,6 +67,10 @@ class UserController extends Controller
         $newUser = User::create($validated);
         $newUser->assignRole($request->role);
 
+        if (!$newUser) {
+            return back()->withInput()->with('danger', 'Failed to create new employee level');
+        }
+
         return redirectWithAlert('users', 'success', 'New User Created Successfully');
     }
 

@@ -306,7 +306,10 @@ return [
             'url'  => 'home',
             'icon' => 'fas fa-tachometer-alt'
         ],
-        ['header' => 'USER MANAGEMENT'],
+        [
+            'header' => 'USER MANAGEMENT',
+            'can' => ['view-roles', 'view-users'],
+        ],
         [
             'text' => 'Roles',
             'url'  => 'roles',
@@ -321,13 +324,27 @@ return [
             'can' => 'view-users',
             'active' => ['users*'],
         ],
-        ['header' => 'ORGANIZATIONAL'],
+        [
+            'header' => 'ORGANIZATIONAL',
+            'can' => ['view-departments'],
+        ],
         [
             'text' => 'Department',
             'url'  => 'departments',
-            'icon' => 'fas fa-users-cog',
+            'icon' => 'fas fa-building',
             'can' => 'view-departments',
             'active' => ['departments*'],
+        ],
+        [
+            'header' => 'SALARY ADMINISTRATIVE',
+            'can' => ['view-levels'],
+        ],
+        [
+            'text' => 'Employee Level',
+            'url'  => 'levels',
+            'icon' => 'fas fa-people-arrows',
+            'can' => 'view-levels',
+            'active' => ['levels*'],
         ],
         ['header' => 'account_settings'],
         [
