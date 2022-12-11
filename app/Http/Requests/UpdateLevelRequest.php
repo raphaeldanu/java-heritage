@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateLevelRequest extends FormRequest
 {
@@ -13,7 +14,10 @@ class UpdateLevelRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        if($this->user()->cannot('update', $this->level)){
+            return redirectNotAuthorized('levels');
+        }
+        return true;
     }
 
     /**
@@ -24,7 +28,11 @@ class UpdateLevelRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => [
+                'string',
+                'required',
+                Rule::unique('levels')->ignore($this->level)
+            ],
         ];
     }
 }

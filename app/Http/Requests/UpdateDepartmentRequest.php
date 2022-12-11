@@ -14,7 +14,7 @@ class UpdateDepartmentRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->user()->cannot('update', $this->route('department'))) {
+        if ($this->user()->cannot('update', $this->department)) {
             return redirectNotAuthorized('users');
         }
         return true;

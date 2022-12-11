@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRoleRequest extends FormRequest
+class StorePositionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,10 +13,7 @@ class UpdateRoleRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->user()->cannot('update', $this->role)){
-            return redirectNotAuthorized('roles');
-        }
-        return true;
+        return false;
     }
 
     /**
@@ -28,10 +24,7 @@ class UpdateRoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['string', 
-                        'required', 
-                        Rule::unique('roles')->ignore($this->role),
-                    ],
+            //
         ];
     }
 }

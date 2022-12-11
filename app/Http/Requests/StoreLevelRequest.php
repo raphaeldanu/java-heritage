@@ -13,7 +13,7 @@ class StoreLevelRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->can('create-levels');
     }
 
     /**
@@ -24,7 +24,7 @@ class StoreLevelRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string|unique:levels'
         ];
     }
 }

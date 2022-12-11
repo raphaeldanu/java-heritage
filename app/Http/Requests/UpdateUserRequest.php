@@ -14,7 +14,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->user()->cannot('update', $this->route('user'))) {
+        if ($this->user()->cannot('update', $this->user)) {
             return redirectNotAuthorized('users');
         }
         return true;
