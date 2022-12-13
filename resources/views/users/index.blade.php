@@ -42,7 +42,7 @@
         @endphp
         <div class="col-2">
           <x-adminlte-select name="status" enable-old-support>
-            <x-adminlte-options empty-option="Search by status" :options="[1 => 'Active', 0 => 'Inactive']" :selected="$selected1" />
+            <x-adminlte-options empty-option="Search by status" :options="['active' => 'Active', 'inactive' => 'Inactive']" :selected="$selected1" />
         </x-adminlte-select>
         </div>
         @php

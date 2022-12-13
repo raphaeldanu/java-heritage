@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\PositionController;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SalaryRangeController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -45,4 +47,6 @@ Route::resources([
     'users' => UserController::class,
     'departments' => DepartmentController::class,
     'levels' => LevelController::class,
+    'positions' => PositionController::class,
+    'salary-ranges' => SalaryRangeController::class
 ]);

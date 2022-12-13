@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Department extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that aren't mass assignable.
@@ -28,5 +28,15 @@ class Department extends Model
         $query->when($keyword ?? false, fn($query, $keyword) => 
             $query->where('name', 'like', '%' . $keyword . '%')
         );
+    }
+
+    /**
+     * Get all of the positions for the Department
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function positions(): HasMany
+    {
+        return $this->hasMany(Position::class);
     }
 }

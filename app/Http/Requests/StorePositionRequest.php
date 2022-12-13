@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePositionRequest extends FormRequest
 {
@@ -13,7 +14,10 @@ class StorePositionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        if ($this->user()->cannot('create-positions')) {
+            return redirectNotAuthorized('positions');
+        }
+        return true;
     }
 
     /**
@@ -24,7 +28,12 @@ class StorePositionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'department_id' => 'required',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('positions')->where(fn ($query) => $query->where('department_id', $this->department_id))
+            ]
         ];
     }
 }

@@ -31,7 +31,7 @@ class UpdateLevelRequest extends FormRequest
             'name' => [
                 'string',
                 'required',
-                Rule::unique('levels')->ignore($this->level)
+                Rule::unique('levels')->whereNull('deleted_at')->ignore($this->level)
             ],
         ];
     }

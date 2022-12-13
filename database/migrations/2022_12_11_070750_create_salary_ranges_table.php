@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('salary_ranges', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('level_id')->constrained();
+            $table->string('name');
+            $table->decimal('base_salary', 16, 2);
             $table->timestamps();
         });
     }

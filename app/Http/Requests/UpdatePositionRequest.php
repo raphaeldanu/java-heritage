@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePositionRequest extends FormRequest
@@ -13,7 +14,10 @@ class UpdatePositionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        if ($this->user()->cannot('update', $this->position)) {
+            return redirectNotAuthorized('positions');
+        }
+        return true;
     }
 
     /**
@@ -24,7 +28,12 @@ class UpdatePositionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'department_id' => 'required',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('positions')->where(fn ($query) => $query->where('department_id', $this->department_id))->whereNull('deleted_at')->ignore($this->position)
+            ]
         ];
     }
 }

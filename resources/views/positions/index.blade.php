@@ -22,59 +22,70 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-levels')
-        <a href="{{ route('levels.create') }}" class="btn btn-primary">Create New Employee Level</a>
+      @can('create-users')
+        <a href="{{ route('positions.create') }}" class="btn btn-primary">Create New Position</a>
       @endcan
     </div>
     <div class="card-tools">
-      {{ $levels->links() }}
+      {{ $positions->links() }}
     </div>
   </div>
   <!-- /.card-header -->
   <div class="card-body p-0">
-    <form action="{{ route('levels.index') }}">
+    <form action="{{ route('positions.index') }}">
       <div class="row">
-        <div class="col-11 pr-0">
-          <input type="text" name="search" class="form-control" placeholder="Search level" value="{{ request('search') }}">
+        <div class="col-8">
+          <input type="text" name="search" class="form-control" placeholder="Search positions" value="{{ request('search') }}">
         </div>
-        <div class="col-1 pl-0">
+        @php
+          $options = $departments->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name']] )->all();
+          $selected2 = [request('department_id')];
+        @endphp
+        <div class="col-3">
+          <x-adminlte-select name="department_id" enable-old-support>
+            <x-adminlte-options empty-option="Select by department" :options="$options" :selected="$selected2" />
+        </x-adminlte-select>
+        </div>
+        <div class="col-1">
           <x-adminlte-button type="submit" icon="fas fa-search" theme="info" class="float-right" class="btn-block"/>
         </div>
       </div>
     </form>
-    @if ($levels->isNotEmpty())
+    @if ($positions->isNotEmpty())
     <table class="table">
       <thead>
         <tr>
           <th style="width: 10px">#</th>
-          <th>Role Name</th>
+          <th>Name</th>
+          <th>Department</th>
           <th class="col-2 text-center">Action</th>
         </tr>
       </thead>
       <tbody>
-        @foreach ($levels as $level)
+        @foreach ($positions as $position)
         <tr>
           <td>{{ $loop->iteration }}</td>
-          <td>{{ $level->name }}</td>
+          <td>{{ $position->name }}</td>
+          <td>{{ $position->department->name }}</td>
           <td>
             <div class="d-flex justify-content-around align-items-center">
-              <a href="{{ route('levels.show', ['level' => $level]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
-              @can('update', $level)
-              <a href="{{ route('levels.edit', ['level' => $level]) }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
+              <a href="{{ route('positions.show', ['position' => $position]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
+              @can('update', $position)
+              <a href="{{ route('positions.edit', ['position' => $position]) }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
               @endcan
-              @can('delete', $level)
-              <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $level->id }}" theme="danger"/>
-              <form method="post" action="{{ route('levels.destroy', ['level' => $level]) }}">
-                <x-adminlte-modal id="modalDelete{{ $level->id }}" title="Delete Role" theme="teal"
+              @can('delete', $position)
+              <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $position->id }}" theme="danger"/>
+              <form method="post" action="{{ route('positions.destroy', ['position' => $position]) }}">
+                <x-adminlte-modal id="modalDelete{{ $position->id }}" title="Delete Role" theme="teal"
                     icon="fas fa-bolt" size='lg' disable-animations>
-                    Are you sure you want to delete {{ $level->name }}?
+                    Are you sure you want to delete {{ $position->name }}?
                       @csrf @method('delete')
                       <x-slot name="footerSlot">
                         <x-adminlte-button type="submit" name="submit" class="mr-auto" theme="success" label="Yes"/>
                         <x-adminlte-button theme="danger" label="No" data-dismiss="modal"/>
                     </x-slot>
                 </x-adminlte-modal>
-                </form>
+              </form>
               @endcan
           </div>
           </td>
@@ -84,10 +95,12 @@
     </table>
     @else
     <dt class="p-3">
-      Employee Level Not Found
+      Positions Not Found
     </dt>
     @endif
   </div>
   <!-- /.card-body -->
 </div>
+
+
 @endsection

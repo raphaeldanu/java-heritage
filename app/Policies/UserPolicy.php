@@ -63,7 +63,7 @@ class UserPolicy
     public function delete(User $user, User $model)
     {
         if ($user->can('delete-users')){
-            return ($user->id != $model->id) and ($model->hasRole('Human Resource Manager' ? $user->hasRole('Human Resource Manager') : true));
+            return ($user->id != $model->id) and ($model->hasRole('Human Resource Manager') ? $user->hasRole('Human Resource Manager') : true);
         }
         return false;
     }
