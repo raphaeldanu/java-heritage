@@ -119,8 +119,11 @@ class LevelController extends Controller
         if ($request->name != $level->name) {
             $validated = $request->validated();
             $level->update($validated);
+            if (!$level->wasChanged()) {
+                return back()->withInput()->with('danger', 'Failed to update level');
+            }
         }
-
+        
         return redirectWithAlert('levels', 'success', 'Employee Level Updated Successfully');
     }
 

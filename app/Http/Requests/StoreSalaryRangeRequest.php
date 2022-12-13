@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreSalaryRangeRequest extends FormRequest
 {
@@ -13,7 +14,10 @@ class StoreSalaryRangeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        if ($this->user()->cannot('create-salary-ranges')) {
+            return redirectNotAuthorized('salary-ranges');
+        }
+        return true;
     }
 
     /**
@@ -24,7 +28,13 @@ class StoreSalaryRangeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'level_id' => 'required',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('salary_ranges')->where(fn ($query) => $query->where('level_id', $this->level_id)),
+            ],
+            'base_salary' => 'required|numeric|min:100000',
         ];
     }
 }

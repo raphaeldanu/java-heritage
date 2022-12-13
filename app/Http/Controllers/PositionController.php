@@ -118,14 +118,11 @@ class PositionController extends Controller
      */
     public function update(UpdatePositionRequest $request, Position $position)
     {
-        if ($request->name != $position->name) {
-            $validated = $request->validated();
-            $position->update($validated);
-            if (!$position->wasChanged()) {
-                return back()->withInput()->with('danger', 'Failed to update position');
-            }
+        $validated = $request->validated();
+        $position->update($validated);
+        if (!$position->wasChanged()) {
+            return back()->withInput()->with('danger', 'Failed to update position');
         }
-
         return redirectWithAlert('positions', 'success', 'Successfully updated the position');
     }
 

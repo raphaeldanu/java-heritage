@@ -117,6 +117,10 @@ class DepartmentController extends Controller
         if ($request->name != $department->name) {
             $validated = $request->validated();
             $department->update($validated);
+
+            if (!$department->wasChanged()) {
+                return back()->withInput()->with('danger', 'Failed to update department');
+            }
         }
 
         return redirectWithAlert('departments', 'success', 'Departments Updated Successfully');

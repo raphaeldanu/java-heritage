@@ -11,29 +11,6 @@ class SalaryRangePolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAny(User $user)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\SalaryRange  $salaryRange
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function view(User $user, SalaryRange $salaryRange)
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
@@ -53,7 +30,7 @@ class SalaryRangePolicy
      */
     public function update(User $user, SalaryRange $salaryRange)
     {
-        //
+        return $user->can('update-salary-ranges');
     }
 
     /**
@@ -65,7 +42,7 @@ class SalaryRangePolicy
      */
     public function delete(User $user, SalaryRange $salaryRange)
     {
-        //
+        return $user->can('delete-salary-ranges');
     }
 
     /**

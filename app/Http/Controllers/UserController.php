@@ -121,6 +121,9 @@ class UserController extends Controller
         if($request->username != $user->id){
             $validated = $request->safe()->only(['username']);
             $user->update($validated);
+            if (!$user->wasChanged()) {
+                return back()->withInput()->with('danger', 'Failed to update user');
+            }
         } 
         
         $user->syncRoles($request->role);
