@@ -33,7 +33,7 @@ class PositionController extends Controller
 
         return view('positions.index', [
             'title' => 'Positions',
-            'positions' => Position::filters(request(['search', 'department_id']))->paginate(15)->withQueryString(),
+            'positions' => Position::filters(request(['search', 'department_id']))->orderBy('department_id')->paginate(15)->withQueryString(),
             'departments' => Department::all(),
         ]);
     }

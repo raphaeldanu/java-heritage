@@ -20,12 +20,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
 
         $user = User::create([
             'username' => 'raphaeldanu',
@@ -66,6 +60,11 @@ class DatabaseSeeder extends Seeder
             'create-positions',
             'update-positions',
             'delete-positions',
+            'view-employees',
+            'view-employee-detail',
+            'create-employees',
+            'update-employees',
+            'delete-employees',
         ];
         $superAdmin = Role::create(['name' => 'Human Resource Manager']);
         $staff = Role::create(['name' => "Human Resource Staff"]);
@@ -80,40 +79,9 @@ class DatabaseSeeder extends Seeder
 
         $user2->assignRole($staff);
 
-        $levels = [
-            'Executive',
-            'Manager 2',
-            'Manager 1',
-            'Supervisor 2',
-            'Supervisor 1',
-            'Rank and File 2',
-            'Rank and File 1',
-            'Daily Worker',
-        ];
-
-        foreach ($levels as $value) {
-            Level::create([
-                'name' => $value
-            ]);
-        }
-
-        $departments = [
-            'Admin & General',
-            'Front Office',
-            'Housekeeping',
-            'Food & Beverage Product',
-            'Food & Beverage Service',
-            'Engineering',
-            'Human Resource',
-            'Marketing',
-            'Accounting',
-        ];
-
-        foreach ($departments as $value) {
-            Department::create([
-                'name' => $value
-            ]);
-        }
-
+        $this->call([
+            PositionSeeder::class,
+            SalaryRangeSeeder::class,
+        ]);
     }
 }

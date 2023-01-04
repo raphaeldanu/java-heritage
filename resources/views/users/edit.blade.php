@@ -11,7 +11,7 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ url('users') }}">User</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('users.index') }}">User</a></li>
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
@@ -38,7 +38,7 @@
   </form>
 </x-adminlte-card>
 @can('changePassword', $user) 
-<x-adminlte-card theme="teal" theme-mode="outline">
+<x-adminlte-card title="Change Password" theme="teal" theme-mode="outline">
   <form action="{{ route('users.change-password', ['user' => $user]) }}" method="POST">
     @csrf
     @method("put")

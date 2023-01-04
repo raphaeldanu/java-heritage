@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PositionController;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
@@ -42,11 +42,17 @@ Route::get('/home', function() {
 Route::put('users/{user}/change-status', [UserController::class, 'changeStatus'])->name('users.change-status');
 Route::put('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
 
+//Employees
+Route::get('employees/pick-user/', [EmployeeController::class, 'pickUser'])->name('employees.pick-user');
+Route::get('employees/create/{user}', [EmployeeController::class, 'create'])->name('employees.create');
+
+Route::resource('employees', EmployeeController::class)->except('create');
+
 Route::resources([
     'roles' => RoleController::class,
     'users' => UserController::class,
     'departments' => DepartmentController::class,
     'levels' => LevelController::class,
     'positions' => PositionController::class,
-    'salary-ranges' => SalaryRangeController::class
+    'salary-ranges' => SalaryRangeController::class,
 ]);

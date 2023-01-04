@@ -106,7 +106,7 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
-    <script src="{{ asset('vendor/adminlte/dist/js/adminlte.js') }}"></script>
+    {{-- <script src="{{ asset('vendor/adminlte/dist/js/adminlte.js') }}"></script> --}}
 
     {{-- Toastr Alert --}}
     @if (session('success'))

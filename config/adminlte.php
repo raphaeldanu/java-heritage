@@ -210,9 +210,9 @@ return [
     |
     */
 
-    'sidebar_mini' => 'lg',
+    'sidebar_mini' => 'xs',
     'sidebar_collapse' => false,
-    'sidebar_collapse_auto_size' => false,
+    'sidebar_collapse_auto_size' => true,
     'sidebar_collapse_remember' => false,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
@@ -326,7 +326,7 @@ return [
         ],
         [
             'header' => 'ORGANIZATIONAL',
-            'can' => ['view-departments'],
+            'can' => ['view-departments', 'view_positions'],
         ],
         [
             'text' => 'Department',
@@ -341,6 +341,17 @@ return [
             'icon' => 'fas fa-id-badge',
             'can' => 'view-positions',
             'active' => ['positions*'],
+        ],
+        [
+            'header' => 'EMPLOYEE MANAGEMENT',
+            'can' => ['view-employees'],
+        ],
+        [
+            'text' => 'Employee',
+            'url'  => 'employees',
+            'icon' => 'fas fa-user-tie',
+            'can' => 'view-employees',
+            'active' => ['employees*'],
         ],
         [
             'header' => 'SALARY ADMINISTRATIVE',
@@ -538,6 +549,26 @@ return [
                     'type' => 'js',
                     'asset' => true,
                     'location' => 'vendor/bootstrap-switch/js/bootstrap-switch.min.js',
+                ],
+            ],
+        ],
+        'TempusDominusBs4' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/moment/moment.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js',
+                ],
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'vendor/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
                 ],
             ],
         ],
