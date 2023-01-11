@@ -37,30 +37,30 @@ class UpdateEmployeeRequest extends FormRequest
             'salary_range_id' => 'required|numeric|exists:salary_ranges,id',
             'nik' => [
                 'required',
-                'integer',
-                'digit:16',
+                'numeric',
+                'digits:16',
                 Rule::unique('employees')->ignore($this->employee),
             ],
             'bpjs_tk_number' => [
                 'required',
-                'integer',
-                'digit:11',
+                'numeric',
+                'digits:11',
                 Rule::unique('employees')->ignore($this->employee),
             ],
             'bpjs_kes_number' => [
                 'required',
-                'integer',
-                'digit:13',
+                'numeric',
+                'digits:13',
                 Rule::unique('employees')->ignore($this->employee),
             ],
             'npwp_number' => [
                 'required',
-                'integer',
+                'numeric',
                 'max_digits:16',
                 'min_digits:15',
                 Rule::unique('employees')->ignore($this->employee),
             ],
-            'name' => 'required|string|alpha',
+            'name' => 'required|string',
             'employment_status' => 'required|string',
             'first_join' => [
                 'required',
@@ -73,7 +73,7 @@ class UpdateEmployeeRequest extends FormRequest
             'gender' => 'required|string',
             'tax_status' => 'required|string',
             'address_on_id' => 'required|string',
-            'phone_number' => 'required|integer|max_digits:16',
+            'phone_number' => 'required|numeric|max_digits:16',
             'blood_type' => 'nullable|string',
         ];
     }

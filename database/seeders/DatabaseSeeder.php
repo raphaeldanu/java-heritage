@@ -65,6 +65,10 @@ class DatabaseSeeder extends Seeder
             'create-employees',
             'update-employees',
             'delete-employees',
+            'view-residence',
+            'create-residence',
+            'update-residence',
+            'delete-residence',
         ];
         $superAdmin = Role::create(['name' => 'Human Resource Manager']);
         $staff = Role::create(['name' => "Human Resource Staff"]);
@@ -82,6 +86,29 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PositionSeeder::class,
             SalaryRangeSeeder::class,
+        ]);
+
+        $user->employee()->create([
+            'user_id' => 1,
+            'position_id' => 3,
+            'salary_range_id' => 2,
+            'nik' => '3374082509010002',
+            'nip' => 'JH.0001',
+            'bpjs_tk_number' => '01526084818',
+            'bpjs_kes_number' => '0001526084818',
+            'npwp_number' => '3374082509010002',
+            'name' => "Raphael Adhimas Aryandanu Santoso",
+            'employment_status' => "contract",
+            'first_join' => '2023-01-01',
+            'last_contract_start' => '2023-01-01',
+            'last_contract_end' => '2023-12-31',
+            'birth_place' => 'Semarang',
+            'birth_date' => '2001-09-25',
+            'gender' => 'male',
+            'tax_status' => 'B',
+            'address_on_id' => 'Jl. Dr. Wahidin 110B Semarang',
+            'phone_number' => '082135763151',
+            'blood_type' => 'O',
         ]);
     }
 }

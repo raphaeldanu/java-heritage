@@ -120,9 +120,6 @@ class PositionController extends Controller
     {
         $validated = $request->validated();
         $position->update($validated);
-        if (!$position->wasChanged()) {
-            return back()->withInput()->with('danger', 'Failed to update position');
-        }
         return redirectWithAlert('positions', 'success', 'Successfully updated the position');
     }
 

@@ -2,7 +2,14 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use App\Enums\Gender;
+use App\Enums\TaxStatus;
+use App\Enums\EmploymentStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -18,6 +25,21 @@ class Employee extends Model
     protected $guarded = ['id'];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'employment_status' => EmploymentStatus::class,
+        'gender' => Gender::class,
+        'tax_status' => TaxStatus::class,
+        'first_join' => 'date:Y-m-d',
+        'last_contract_start' => 'date:Y-m-d',
+        'last_contract_end' => 'date:Y-m-d',
+        'birth_date' => 'date:Y-m-d',
+    ];
+
+    /**
      * Scope a query to search employee
      *
      * @param  \Illuminate\Database\Eloquent\Builder $query
@@ -27,6 +49,7 @@ class Employee extends Model
     {
         $query->when($filters['search'] ?? false, fn($query, $search) => 
             $query->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('nip', 'like', '%' . $search . '%')
         );
 
         $query->when($filters['level_id'] ?? false, fn($query, $level_id) => 
@@ -68,5 +91,35 @@ class Employee extends Model
     public function salaryRange(): BelongsTo
     {
         return $this->belongsTo(SalaryRange::class);
+    }
+
+    /**
+     * Get the residence associated with the Employee
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function residence(): HasOne
+    {
+        return $this->hasOne(ResidenceAddress::class);
+    }
+
+    /**
+     * Get the leave associated with the Employee
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function leave(): HasOne
+    {
+        return $this->hasOne(Leave::class);
+    }
+
+    /**
+     * Get all of the families for the Employee
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function families(): HasMany
+    {
+        return $this->hasMany(Family::class);
     }
 }

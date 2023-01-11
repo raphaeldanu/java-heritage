@@ -2,13 +2,16 @@
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\ResidenceAddressController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SalaryRangeController;
 use App\Http\Controllers\UserController;
+use App\Models\ResidenceAddress;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,10 +46,37 @@ Route::put('users/{user}/change-status', [UserController::class, 'changeStatus']
 Route::put('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
 
 //Employees
-Route::get('employees/pick-user/', [EmployeeController::class, 'pickUser'])->name('employees.pick-user');
-Route::get('employees/create/{user}', [EmployeeController::class, 'create'])->name('employees.create');
+Route::controller(EmployeeController::class)->group(function () {
+    Route::name('employees.')->group(function () {
+        Route::get('employees/pick-user/', 'pickUser')->name('pick-user');
+        Route::get('employees/create/{user}', 'create')->name('create');
+    });
+});
 
 Route::resource('employees', EmployeeController::class)->except('create');
+
+//Residence Address
+Route::controller(ResidenceAddressController::class)->group(function () {
+    Route::name('residences.')->group(function () {
+        Route::get('employees/{employee}/residence/create', 'create')->name('create');
+        Route::post('employees/{employee}/residence', 'store')->name('store');
+        Route::put('employees/{employee}/residence', 'update')->name('update');
+        Route::get('employees/{employee}/residence/edit', 'edit')->name('edit');
+        Route::delete('employees/{employee}/residence', 'destroy')->name('destroy');
+    });
+});
+
+//Families
+Route::controller(FamilyController::class)->group(function () {
+    Route::name('families.')->group(function () {
+        Route::get('employees/{employee}/families/create', 'create')->name('create');
+        Route::post('employees/{employee}/families', 'store')->name('store');
+        Route::get('employees/{employee}/families/{family}', 'show')->name('show');
+        Route::get('employees/{employee}/families/{family}/edit', 'edit')->name('edit');
+        Route::put('employees/{employee}/families/{family}', 'update')->name('update');
+        Route::delete('employees/{employee}/families/{family}', 'destroy')->name('destroy');
+    });
+});
 
 Route::resources([
     'roles' => RoleController::class,

@@ -2,77 +2,80 @@
 
 namespace App\Policies;
 
-use App\Models\Employee;
+use App\Models\Leave;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class EmployeePolicy
+class LeavePolicy
 {
     use HandlesAuthorization;
+
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function viewAny(User $user)
+    {
+        //
+    }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Employee  $employee
+     * @param  \App\Models\Leave  $leave
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Employee $employee)
+    public function view(User $user, Leave $leave)
     {
-        if ($user->can('view-employee-detail')) {
-            return true;
-        }
+        //
+    }
 
-        if ($user->id == $employee->user_id) {
-            return true;
-        }
-        return false;
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function create(User $user)
+    {
+        //
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Employee  $employee
+     * @param  \App\Models\Leave  $leave
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Employee $employee)
+    public function update(User $user, Leave $leave)
     {
-        if ($user->can('update-employees')) {
-            return true;
-        }
-
-        if ($user->id == $employee->user_id) {
-            return true;
-        }
-
-        return false;
+        //
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Employee  $employee
+     * @param  \App\Models\Leave  $leave
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Employee $employee)
+    public function delete(User $user, Leave $leave)
     {
-        if ($user->cannot('delete-employee')) {
-            return false;
-        }
-
-        return true;
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Employee  $employee
+     * @param  \App\Models\Leave  $leave
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Employee $employee)
+    public function restore(User $user, Leave $leave)
     {
         //
     }
@@ -81,10 +84,10 @@ class EmployeePolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Employee  $employee
+     * @param  \App\Models\Leave  $leave
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Employee $employee)
+    public function forceDelete(User $user, Leave $leave)
     {
         //
     }

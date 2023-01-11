@@ -156,9 +156,31 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee)
+    public function show(Request $request, Employee $employee)
     {
-        //
+        if($request->user()->cannot('view', $employee)){
+            return redirectNotAuthorized('employees');
+        }
+        
+        $employee = Employee::with([
+            'user',
+            'position',
+            'salaryRange',
+            'residence',
+            'families',
+        ])->find($employee->id);
+
+        if (isset($employee->last_contract_end)) {
+            $remaining_contract = now()->diffInDays($employee->last_contract_end);
+        } else {
+            $remaining_contract = null;
+        }
+
+        return view('employees.show', [
+            'title' => "Employee Details",
+            'employee' => $employee,
+            'remaining_contract' => $remaining_contract,
+        ]);
     }
 
     /**
@@ -169,7 +191,7 @@ class EmployeeController extends Controller
      */
     public function edit(Request $request, Employee $employee)
     {
-        if ($request->user()->cannot('update-employees')) {
+        if ($request->user()->cannot('update', $employee)) {
             return redirectNotAuthorized('employees');
         }
 
@@ -234,17 +256,44 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        //
+        $uniqueColumn = [
+            'nik',
+            'bpjs_tk_number',
+            'bpjs_kes_number',
+            'npwp_number',
+        ];
+        $validated = $request->safe()->except($uniqueColumn);
+        
+        foreach($uniqueColumn as $item){
+            if($employee->$item != $request->$item){
+                $validated[$item] = $request->$item;
+            }
+        }
+
+        if($employee->update($validated)){
+            return redirectWithAlert('employees', 'success', 'Employee Updated Successfully');
+        }
+
+        return back()->withInput()->with('danger', 'Failed to update employee');
     }
 
     /**
      * Remove the specified resource from storage.
      *
+     * @param  Illuminate\Http\Request $request
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Employee $employee)
+    public function destroy(Request $request, Employee $employee)
     {
-        //
+        if ($request->user()->cannot('delete-employees')) {
+            return redirectNotAuthorized('employees');
+        }
+
+        if(!$employee->delete()){
+            return redirectWithAlert('employees', 'danger', "Failed to delete employee detail");
+        }
+
+        return redirectWithAlert('employees', 'success', 'Employee detail deleted successfully');
     }
 }
