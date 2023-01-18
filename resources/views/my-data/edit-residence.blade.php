@@ -24,10 +24,11 @@
 @section('plugins.TempusDominusBs4', true)
 
 @section('content')
-<x-adminlte-card title="Add Residence Adrress For {{ $employee->name }}" theme="teal" theme-mode="outline">
-  <form action="{{ route('residences.store', ['employee' => $employee]) }}" method="POST">
+<x-adminlte-card title="Edit Residence Address For {{ $employee->name }}" theme="teal" theme-mode="outline">
+  <form action="{{ route('employees.update-residence', ['employee' => $employee]) }}" method="POST">
     @csrf
-    <x-adminlte-textarea name="address" placeholder="Address" label="Address" rows=3 enable-old-support/>
+    @method('put')
+    <x-adminlte-textarea name="address" placeholder="Address" label="Address" rows=3 enable-old-support>{{ $employee->residence->address }}</x-adminlte-textarea>
     <x-adminlte-button type="submit" label="Save" theme="primary" class="d-flex ml-auto" name="submit"/>
   </form>
 </x-adminlte-card>

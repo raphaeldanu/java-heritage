@@ -17,9 +17,9 @@ return new class extends Migration
         Schema::create('leaves', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Employee::class)->constrained();
-            $table->integer('annual');
-            $table->integer('dp');
-            $table->integer('extra_off');
+            $table->integer('annual')->default(0);
+            $table->integer('dp')->default(0);
+            $table->integer('extra_off')->default(0);
             $table->timestamps();
         });
     }

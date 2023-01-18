@@ -42,11 +42,6 @@ class User extends Authenticatable
     protected $casts = [
         'active' => 'boolean',
     ];
-
-    public function adminlte_profile_url()
-    {
-        return 'profile/username';
-    }
     
     public function changeStatus()
     {

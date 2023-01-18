@@ -20,6 +20,7 @@
 @endsection
 
 @section('content')
+@isset($employee)
 @if ($remaining_contract != null and $remaining_contract <= 90)
 <x-adminlte-alert theme="warning" title="Warning">
   {{ $employee->name.' contract will end in '.$remaining_contract.' days!' }}
@@ -241,38 +242,19 @@
         <div class="tab-content">
           <div class="active tab-pane" id="leave">
             @isset ($employee->leave)
-            
-            <div class="row">
-              <div class="col-8">
-                <dl>
-                  <dt>Annual</dt>
-                  <dd>{{ $employee->leave->annual }}</dd>
-                  <dt>Day of Payment</dt>
-                  <dd>{{ $employee->leave->dp }}</dd>
-                  <dt>Extra Off</dt>
-                  <dd>{{ $employee->leave->extra_off }}</dd>
-                </dl>
-              </div>
-              <div class="col-4">
-                <div class="d-flex justify-content-end mb-3">
-                  @can('update', $employee->leave)    
-                    <a href="{{ route('employees.edit-leave', ['employee' => $employee]) }}" class="btn bg-teal">Edit Leave Quota</a>
-                  @endcan
-                </div>
-              </div>
-            </div>
+            <dl>
+              <dt>Annual</dt>
+              <dd>{{ $employee->leave->annual }}</dd>
+              <dt>Day of Payment</dt>
+              <dd>{{ $employee->leave->dp }}</dd>
+              <dt>Extra Off</dt>
+              <dd>{{ $employee->leave->extra_off }}</dd>
+            </dl>
             @else
             <div class="d-flex justify-content-center">
-              @can('create-employees')
-              <form action="{{ route('employees.add-leave', ['employee' => $employee]) }}" method="post">
-                @csrf
-                <x-adminlte-button type="submit" name="submit" class="mr-auto bg-teal" label="Add Leave"/>
-              </form>
-              @else
               <dl>
-                <dt>Not authorized</dt>
+                <dt>Please Contact your head of department or HRD Staff</dt>
               </dl>
-              @endcan
             </div>
             @endisset
           </div>
@@ -288,4 +270,13 @@
     {{-- @endif --}}
   </div>
 </div>
+@else
+<x-adminlte-card theme="teal" theme-mode="outline">
+  <div class="d-flex justify-content-end mb-3">
+    @can('create', [App\Models\Family::class, $employee])    
+      <a href="{{ route('families.create', ['employee' => $employee]) }}" class="btn bg-teal">Add Family Members</a>
+    @endcan
+  </div>
+</x-adminlte-card>
+@endisset
 @endsection

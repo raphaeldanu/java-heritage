@@ -25,7 +25,7 @@
 
 @section('content')
 <x-adminlte-card title="Edit Residence Address For {{ $employee->name }}" theme="teal" theme-mode="outline">
-  <form action="{{ route('residences.update', ['employee' => $employee]) }}" method="POST">
+  <form action="{{ route('employees.update-residence', ['employee' => $employee]) }}" method="POST">
     @csrf
     @method('put')
     <x-adminlte-textarea name="address" placeholder="Address" label="Address" rows=3 enable-old-support>{{ $employee->residence->address }}</x-adminlte-textarea>

@@ -130,7 +130,7 @@
     @if (session('danger'))
     <script>
     var Msg = "<?php echo session('danger'); ?>";
-    toastr.danger(Msg);
+    toastr.error(Msg);
     </script>
     @endif
 </body>

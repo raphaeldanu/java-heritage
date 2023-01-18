@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateLeaveRequest extends FormRequest
+class StoreLeaveRequestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,10 +13,7 @@ class UpdateLeaveRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->user()->can('update', $this->leave)) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     /**
@@ -27,9 +24,10 @@ class UpdateLeaveRequest extends FormRequest
     public function rules()
     {
         return [
-            'annual' => 'required|numeric',
-            'dp' => 'required|numeric',
-            'extra_off' => 'required|numeric',
+            'leave_type' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after:start_date',
+            'note' => 'nullable|string',
         ];
     }
 }

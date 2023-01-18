@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Enums\Gender;
+use App\Models\Leave;
 use App\Models\Level;
 use App\Enums\TaxStatus;
 use App\Models\Employee;
@@ -16,6 +17,8 @@ use App\Enums\EmploymentStatus;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use sirajcse\UniqueIdGenerator\UniqueIdGenerator;
+use App\Http\Requests\StoreResidenceAddressRequest;
+use App\Http\Requests\UpdateResidenceAddressRequest;
 
 class EmployeeController extends Controller
 {
@@ -143,13 +146,14 @@ class EmployeeController extends Controller
         ]);
 
         $newEmployees = Employee::create($validated);
+        $newEmployees->leave()->create();
 
         if (! $newEmployees) {
             return back()->withInput()->with('danger', 'Failed to save new position');
         }
         return redirectWithAlert('employees', 'success', 'New Employee Detail saved successfully');
     }
-
+    
     /**
      * Display the specified resource.
      *
@@ -168,6 +172,8 @@ class EmployeeController extends Controller
             'salaryRange',
             'residence',
             'families',
+            'leave',
+            
         ])->find($employee->id);
 
         if (isset($employee->last_contract_end)) {
@@ -295,5 +301,136 @@ class EmployeeController extends Controller
         }
 
         return redirectWithAlert('employees', 'success', 'Employee detail deleted successfully');
+    }
+
+    // LEAVE
+    /**
+     * Add leave to employee if not created yet.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addLeave(Request $request, Employee $employee)
+    {
+        if($request->user()->cannot('create-employees')){
+            return redirect()->route('employees.show', ['employee' => $employee])->with('warning', 'Not Authorized');
+        }
+
+        if(is_null($employee->leave)){
+            $employee->leave()->create([]);
+        }
+
+        return redirect()->route('employees.show', ['employee' => $employee])->with('success', 'Employee Leave is created successfully');
+    }
+
+    /**
+     * Edit leave of employee.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function editLeave(Request $request, Employee $employee, Leave $leave)
+    {
+        if($request->user()->cannot('update', $leave)){
+            return redirect()->route('employees.show', ['employee' => $employee])->with('warning', 'Not Authorized');
+        }
+
+        return view('employees.edit-leave', [
+            'title' => 'Edit Employee Leave',
+            'leave' => $leave,
+            'employee' => $employee,
+        ]);
+    }
+
+    //RESIDENCE
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createResidence(Request $request, Employee $employee)
+    {
+        if ($request->user()->cannot('create', [ResidenceAddress::class, $employee])){
+            return back()->with('warning', 'Not Authorized');
+        }
+
+        if ($employee->residence != null){
+            return back()->with('warning', $employee->name.' already had a residence address!');
+        }
+
+        return view('residence-address.create', [
+            'title' => 'Add Residence Address',
+            'employee' => $employee,
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreResidenceAddressRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeResidence(StoreResidenceAddressRequest $request, Employee $employee)
+    {
+        $validated = $request->validated();
+        if($employee->residence != null){
+            return redirect()->route('employees.show', ['employee' => $employee])->with('warning', $employee->name.' already have a residence address!'); 
+        }
+        $employee->residence()->create($validated);
+        $newResidence = $employee->residence;
+        if(!$newResidence){
+            return back()->withInput()->with('danger', 'Failed to add address');
+        };
+        return redirect()->route('employees.show', ['employee' => $employee])->with('success', 'Residence Address added successfully');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\ResidenceAddress  $residenceAddress
+     * @return \Illuminate\Http\Response
+     */
+    public function editResidence(Request $request, Employee $employee)
+    {
+        if ($request->user()->cannot('update', [$employee->residence, $employee])){
+            return back()->with('warning', 'Not Authorized');
+        }
+
+        return view('residence-address.edit', [
+            'title' => 'Edit Residence Address',
+            'employee' => $employee,
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateResidenceAddressRequest  $request
+     * @param  \App\Models\ResidenceAddress  $residenceAddress
+     * @return \Illuminate\Http\Response
+     */
+    public function updateResidence(UpdateResidenceAddressRequest $request, Employee $employee)
+    {
+        $validated = $request->validated();
+        if (!$employee->residence()->update($validated)) {
+            return back()->withInput()->with('danger', 'Failed to update address');
+        };
+        return redirect()->route('employees.show', ['employee' => $employee])->with('success', 'Residence Address updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Employee  $employee
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyResidence(Request $request, Employee $employee)
+    {
+        if ($request->user()->cannot('delete', [$employee->residence, $employee])){
+            return back()->with('warning', 'Not Authorized');
+        }
+
+        $employee->residence()->delete();
+        return redirect()->route('employees.show', ['employee' => $employee])->with('success', 'Residence deleted successfully');
     }
 }

@@ -307,6 +307,18 @@ return [
             'icon' => 'fas fa-tachometer-alt'
         ],
         [
+            'text' => 'My Leave Request',
+            'url'  => 'leave-requests',
+            'icon' => 'fas fa-mug-hot',
+            'active' => ['leave-requests*'],
+        ],
+        [
+            'text' => 'My Data',
+            'url'  => 'my-data',
+            'icon' => 'fas fa-address-card',
+            'active' => ['my-data*'],
+        ],
+        [
             'header' => 'USER MANAGEMENT',
             'can' => ['view-roles', 'view-users'],
         ],
@@ -344,7 +356,6 @@ return [
         ],
         [
             'header' => 'EMPLOYEE MANAGEMENT',
-            'can' => ['view-employees'],
         ],
         [
             'text' => 'Employee',
@@ -352,6 +363,13 @@ return [
             'icon' => 'fas fa-user-tie',
             'can' => 'view-employees',
             'active' => ['employees*'],
+        ],
+        [
+            'text' => 'Approve Leave Request',
+            'url'  => 'approve-leave-requests',
+            'icon' => 'fas fa-stamp',
+            'active' => ['approve-leave-requests*'],
+            'can' => ['approve-leave-requests', 'approve-all-leave-request'],
         ],
         [
             'header' => 'SALARY ADMINISTRATIVE',

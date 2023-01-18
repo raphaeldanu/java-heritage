@@ -65,10 +65,18 @@ class DatabaseSeeder extends Seeder
             'create-employees',
             'update-employees',
             'delete-employees',
+            'update-employee-leave',
             'view-residence',
             'create-residence',
             'update-residence',
             'delete-residence',
+            'view-families',
+            'create-families',
+            'update-families',
+            'delete-families',
+            'view-leave-requests',
+            'approve-all-leave-requests',
+            'approve-leave-requests',
         ];
         $superAdmin = Role::create(['name' => 'Human Resource Manager']);
         $staff = Role::create(['name' => "Human Resource Staff"]);
@@ -88,7 +96,7 @@ class DatabaseSeeder extends Seeder
             SalaryRangeSeeder::class,
         ]);
 
-        $user->employee()->create([
+        $employee = $user->employee()->create([
             'user_id' => 1,
             'position_id' => 3,
             'salary_range_id' => 2,
@@ -110,5 +118,7 @@ class DatabaseSeeder extends Seeder
             'phone_number' => '082135763151',
             'blood_type' => 'O',
         ]);
+
+        $employee->leave()->create();
     }
 }
