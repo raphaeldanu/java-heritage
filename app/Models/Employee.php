@@ -122,4 +122,14 @@ class Employee extends Model
     {
         return $this->hasMany(Family::class);
     }
+
+    /**
+     * Get all of the leaveRequests for the Employee
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function leaveRequests(): HasMany
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
 }

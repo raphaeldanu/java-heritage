@@ -44,7 +44,7 @@ class EmployeeController extends Controller
 
         return view('employees.index', [
             'levels' => Level::all(),
-            'employees' => Employee::filters(request(['search', 'department_id', 'level_id']))->with('position')->paginate(15)->withQueryString(),
+            'employees' => Employee::filters(request(['search', 'department_id', 'level_id']))->with('position', 'salaryRange')->orderByRaw('position_id IS NULL DESC')->orderByRaw('salary_range_id IS NULL DESC')->orderBy('id', 'ASC')->paginate(15)->withQueryString(),
             'departments' => Department::all(),
             'title' => 'Employees detail',
         ]);
@@ -113,7 +113,6 @@ class EmployeeController extends Controller
             'O' => "O",
         ];
 
-
         return view('employees.create', [
             'title' => 'Create New Employee',
             'user' => $user,
@@ -126,6 +125,7 @@ class EmployeeController extends Controller
             'birthDateConfig' => $birthDateConfig,
             'employmentStatus' => $employment_status,
             'bloodTypes' => $bloodTypes,
+            'breadcrumb' => 'employee',
         ]);
     }
 
@@ -250,6 +250,7 @@ class EmployeeController extends Controller
             'birthDateConfig' => $birthDateConfig,
             'employmentStatus' => $employment_status,
             'bloodTypes' => $bloodTypes,
+            'breadcrumb' => 'employee'
         ]);
     }
 
@@ -358,9 +359,10 @@ class EmployeeController extends Controller
             return back()->with('warning', $employee->name.' already had a residence address!');
         }
 
-        return view('residence-address.create', [
+        return view('employees.create-residence', [
             'title' => 'Add Residence Address',
             'employee' => $employee,
+            'breadcrumb' => 'employee'
         ]);
     }
 
@@ -378,9 +380,7 @@ class EmployeeController extends Controller
         }
         $employee->residence()->create($validated);
         $newResidence = $employee->residence;
-        if(!$newResidence){
-            return back()->withInput()->with('danger', 'Failed to add address');
-        };
+        
         return redirect()->route('employees.show', ['employee' => $employee])->with('success', 'Residence Address added successfully');
     }
 
@@ -396,9 +396,10 @@ class EmployeeController extends Controller
             return back()->with('warning', 'Not Authorized');
         }
 
-        return view('residence-address.edit', [
+        return view('employees.edit-residence', [
             'title' => 'Edit Residence Address',
             'employee' => $employee,
+            'breadcrumb' => 'employee',
         ]);
     }
 

@@ -67,6 +67,7 @@
           <th style="width: 10px">#</th>
           <th>Name</th>
           <th>Position</th>
+          <th>Salary Range</th>
           <th class="col-2 text-center">Action</th>
         </tr>
       </thead>
@@ -75,7 +76,8 @@
         <tr>
           <td>{{ $loop->iteration }}</td>
           <td>{{ $item->name }}</td>
-          <td>{{ $item->position->name }}</td>
+          <td>@isset($item->position) {{ $item->position->name }} @else {{ "Empty Position" }} @endisset</td>
+          <td>@isset($item->salaryRange) {{ $item->salaryRange->name.' - '.$item->salaryRange->level->name }} @else {{ "Empty Salary Range" }} @endisset</td>
           <td>
             <div class="d-flex justify-content-around align-items-center">
               <a href="{{ route('employees.show', ['employee' => $item]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>

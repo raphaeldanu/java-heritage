@@ -65,7 +65,6 @@ class FamilyPolicy
         if($user->can('update-families') or $family->employee->user_id == $user->id){
             return true;
         }
-
         return false;
     }
 

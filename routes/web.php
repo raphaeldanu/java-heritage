@@ -81,9 +81,37 @@ Route::controller(FamilyController::class)->group(function () {
         Route::put('employees/{employee}/families/{family}', 'update')->name('update');
         Route::delete('employees/{employee}/families/{family}', 'destroy')->name('destroy');
     });
+    
+    Route::name('my-data.')->group(function () {
+        Route::get('my-data/families/create', 'createForUser')->name('create-family');
+        Route::post('my-data/families', 'storeForUser')->name('store-family');
+        Route::get('my-data/families/{family}', 'showForUser')->name('show-family');
+        Route::get('my-data/families/{family}/edit', 'editForUser')->name('edit-family');
+        Route::put('my-data/families/{family}', 'updateForUser')->name('update-family');
+        Route::delete('my-data/families/{family}', 'destroyForUser')->name('destroy-family');
+    });
 });
 
-Route::resource('my-data', MyDataController::class)->except('show');
+Route::controller(MyDataController::class)->group(function () {
+    Route::name('my-data.')->group(function () {
+        Route::get('my-data/residence/create', 'createResidence')->name('create-residence');
+        Route::post('my-data/residence', 'storeResidence')->name('store-residence');
+        Route::put('my-data/residence', 'updateResidence')->name('update-residence');
+        Route::get('my-data/residence/edit', 'editResidence')->name('edit-residence');
+        Route::delete('my-data/residence', 'destroyResidence')->name('destroy-residence');
+    });
+});
+
+Route::controller(MyDataController::class)->group(function () {
+    Route::name('my-data.')->group(function () {
+        Route::get('my-data', 'index')->name('index');
+        Route::get('my-data/create', 'create')->name('create');
+        Route::post('my-data', 'store')->name('store');
+        Route::put('my-data', 'update')->name('update');
+        Route::get('my-data/edit', 'edit')->name('edit');
+        Route::delete('my-data', 'destroy')->name('destroy');
+    });
+});
 
 Route::resources([
     'roles' => RoleController::class,

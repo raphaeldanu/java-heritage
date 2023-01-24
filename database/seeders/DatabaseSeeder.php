@@ -33,6 +33,24 @@ class DatabaseSeeder extends Seeder
             'active' => 1
         ]);
 
+        $user3 = User::create([
+            'username' => 'wahyunug',
+            'password' => Hash::make('12345678'),
+            'active' => 1
+        ]);
+
+        $user4 = User::create([
+            'username' => 'herwindosat',
+            'password' => Hash::make('12345678'),
+            'active' => 1
+        ]);
+
+        $user5 = User::create([
+            'username' => 'satriobag',
+            'password' => Hash::make('12345678'),
+            'active' => 1
+        ]);
+
         $permissions = [
             'view-roles',
             'create-roles',
@@ -97,7 +115,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $employee = $user->employee()->create([
-            'user_id' => 1,
             'position_id' => 3,
             'salary_range_id' => 2,
             'nik' => '3374082509010002',
@@ -120,5 +137,101 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $employee->leave()->create();
+
+        $employee2 = $user2->employee()->create([
+            'position_id' => null,
+            'salary_range_id' => 11,
+            'nik' => '3374082509010007',
+            'nip' => 'JH.0002',
+            'bpjs_tk_number' => '01526084819',
+            'bpjs_kes_number' => '0001526084819',
+            'npwp_number' => '3374082509010007',
+            'name' => "Maria Helga Naning Alviana",
+            'employment_status' => "contract",
+            'first_join' => '2023-01-10',
+            'last_contract_start' => '2023-01-10',
+            'last_contract_end' => '2023-01-09',
+            'birth_place' => 'Semarang',
+            'birth_date' => '2004-06-12',
+            'gender' => 'female',
+            'tax_status' => 'K0',
+            'address_on_id' => 'Jl. Talang Semarang',
+            'phone_number' => '082135763151',
+            'blood_type' => 'B',
+        ]);
+
+        $employee2->leave()->create();
+
+        $employee3 = $user3->employee()->create([
+            'position_id' => 5,
+            'salary_range_id' => 11,
+            'nik' => '3374082509010009',
+            'nip' => 'JH.0003',
+            'bpjs_tk_number' => '01526084820',
+            'bpjs_kes_number' => '0001526084820',
+            'npwp_number' => '3374082509010009',
+            'name' => "Wahyu Adi Nugroho",
+            'employment_status' => "contract",
+            'first_join' => '2023-01-10',
+            'last_contract_start' => '2023-01-10',
+            'last_contract_end' => '2024-01-09',
+            'birth_place' => 'Bawen',
+            'birth_date' => '2001-06-12',
+            'gender' => 'male',
+            'tax_status' => 'B',
+            'address_on_id' => 'Jl. jalan yuk, Bawen',
+            'phone_number' => '082135763153',
+            'blood_type' => 'AB',
+        ]);
+
+        $employee3->leave()->create();
+
+        $employee4 = $user4->employee()->create([
+            'position_id' => null,
+            'salary_range_id' => null,
+            'nik' => '3374082509010010',
+            'nip' => 'JH.0004',
+            'bpjs_tk_number' => '01526084821',
+            'bpjs_kes_number' => '0001526084821',
+            'npwp_number' => '3374082509010010',
+            'name' => "Herwindo Satrio Utomo",
+            'employment_status' => "contract",
+            'first_join' => '2023-01-10',
+            'last_contract_start' => '2023-01-10',
+            'last_contract_end' => '2024-01-09',
+            'birth_place' => 'Semarang',
+            'birth_date' => '2001-02-06',
+            'gender' => 'male',
+            'tax_status' => 'B',
+            'address_on_id' => 'Jl. Durian, Semarang',
+            'phone_number' => '082135763155',
+            'blood_type' => 'O',
+        ]);
+
+        $employee4->leave()->create();
+
+        $employee5 = $user5->employee()->create([
+            'position_id' => 5,
+            'salary_range_id' => null,
+            'nik' => '3374082509010011',
+            'nip' => 'JH.0005',
+            'bpjs_tk_number' => '01526084822',
+            'bpjs_kes_number' => '0001526084822',
+            'npwp_number' => '3374082509010011',
+            'name' => "Satrio Bagus Imanulloh",
+            'employment_status' => "contract",
+            'first_join' => '2023-01-10',
+            'last_contract_start' => '2023-01-10',
+            'last_contract_end' => '2024-01-09',
+            'birth_place' => 'Pekalongan',
+            'birth_date' => '2001-05-06',
+            'gender' => 'male',
+            'tax_status' => 'B',
+            'address_on_id' => 'Jl. Durian, Pekalongan',
+            'phone_number' => '082135763155',
+            'blood_type' => 'O',
+        ]);
+
+        $employee5->leave()->create();
     }
 }

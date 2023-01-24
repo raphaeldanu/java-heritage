@@ -28,6 +28,30 @@ class EmployeePolicy
         }
         return false;
     }
+    
+    /**
+     * Determine whether the user can create the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Employee  $employee
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function create(User $user, string $mode)
+    {
+        if ($mode == 'my-data') {
+            if (isset($user->employee)) {
+                return false;
+            }
+            return true;
+        } elseif ($mode == 'employees'){
+            if ($user->can('create-employees')) {
+                return true;
+            }
+            return false;
+        }
+
+        return false;
+    }
 
     /**
      * Determine whether the user can update the model.
@@ -63,29 +87,5 @@ class EmployeePolicy
         }
 
         return true;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function restore(User $user, Employee $employee)
-    {
-        //
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Employee  $employee
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function forceDelete(User $user, Employee $employee)
-    {
-        //
     }
 }

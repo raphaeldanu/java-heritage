@@ -11,8 +11,12 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+        @if ($breadcrumb == 'employee')
         <li class="breadcrumb-item"><a href="{{ route('employees.index') }}">Employees</a></li>
         <li class="breadcrumb-item"><a href="{{ route('employees.show', ['employee' => $employee]) }}">{{ Str::before($employee->name, ' ') }}</a></li>
+        @elseif ($breadcrumb == 'my-data')
+        <li class="breadcrumb-item"><a href="{{ route('my-data.index') }}">My Data</a></li>
+        @endif
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
@@ -25,7 +29,7 @@
 
 @section('content')
 <x-adminlte-card title="Add Residence Adrress For {{ $employee->name }}" theme="teal" theme-mode="outline">
-  <form action="{{ route('employees.store-residence', ['employee' => $employee]) }}" method="POST">
+  <form action="@if ($breadcrumb == 'employee') {{ route('employees.store-residence', ['employee' => $employee]) }} @elseif ($breadcrumb == 'my-data') {{ route('my-data.store-residence') }} @endif" method="POST">
     @csrf
     <x-adminlte-textarea name="address" placeholder="Address" label="Address" rows=3 enable-old-support/>
     <x-adminlte-button type="submit" label="Save" theme="primary" class="d-flex ml-auto" name="submit"/>

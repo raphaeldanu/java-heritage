@@ -11,8 +11,12 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+        @if ($breadcrumb == 'employee')
         <li class="breadcrumb-item"><a href="{{ route('employees.index') }}">Employees</a></li>
         <li class="breadcrumb-item"><a href="{{ route('employees.pick-user') }}">Pick User</a></li>
+        @elseif ($breadcrumb == 'my-data')
+        <li class="breadcrumb-item"><a href="{{ route('my-data.index') }}">My Data</a></li>
+        @endif
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
@@ -24,8 +28,8 @@
 @section('plugins.TempusDominusBs4', true)
 
 @section('content')
-<x-adminlte-card title="Create Employee For {{ $user->username }}" theme="teal" theme-mode="outline">
-  <form action="{{ route('employees.store') }}" method="POST">
+<x-adminlte-card title="Data For {{ $user->username }}"  theme="teal" theme-mode="outline">
+  <form action=" @if ($breadcrumb == 'employee') {{ route('employees.store') }} @elseif ($breadcrumb == 'my-data') {{ route('my-data.store') }} @endif" method="POST">
     @csrf
     <input type="hidden" name="user_id" value="{{ $user->id }}">
     <x-adminlte-input name="name" label="Full Name" type="text" id="name" placeholder="Full Name" enable-old-support/>
@@ -39,12 +43,14 @@
     <x-adminlte-select2 name="employment_status" label="Employment Status" enable-old-support>
       <x-adminlte-options empty-option="Select Employment Status" :options="$employmentStatus"/>
     </x-adminlte-select2>
+    @can('create-employees')
     <x-adminlte-select2 name="position_id" label="Position" enable-old-support>
       <x-adminlte-options empty-option="Select Position" :options="$positions"/>
     </x-adminlte-select2>
     <x-adminlte-select2 name="salary_range_id" label="Salary Range" enable-old-support>
       <x-adminlte-options empty-option="Select Salary Range" :options="$salaryRanges"/>
     </x-adminlte-select2>
+    @endcan
     <x-adminlte-input-date name="first_join" label="First Join Date" :config="$dateConfig" placeholder="Choose first join date" enable-old-support>
     <x-slot name="appendSlot">
       <div class="input-group-text bg-dark">

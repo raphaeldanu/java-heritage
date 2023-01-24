@@ -356,6 +356,7 @@ return [
         ],
         [
             'header' => 'EMPLOYEE MANAGEMENT',
+            'can' => ['view-employees', 'approve-leave-requests', 'approve-all-leave-request']
         ],
         [
             'text' => 'Employee',

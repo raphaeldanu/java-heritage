@@ -14,8 +14,14 @@ class StoreResidenceAddressRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->user()->cannot('create', [ResidenceAddress::class, $this->employee])) {
-            return redirect()->route('employees.show', ['employee' => $this->employee]);
+        if ($this->routeIs('employee.*')){
+            if ($this->user()->cannot('create', [ResidenceAddress::class, $this->employee])) {
+                return redirect()->route('employees.show', ['employee' => $this->employee]);
+            }
+        } else if ($this->routeIs('my-data.*')){
+            if ($this->user()->cannot('create', [ResidenceAddress::class, $this->user()->employee])) {
+                return redirect()->route('my-data.index');
+            }
         }
         return true;
     }

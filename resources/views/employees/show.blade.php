@@ -55,11 +55,20 @@
       </p>
       <hr>
       <strong><i class="fas fa-id-badge mr-1"></i> Position - Department</strong>
-      <p class="text-muted">{{ $employee->position->name.' - '.$employee->position->department->name }}</p>
+      <p class="text-muted">@isset($employee->position)
+        {{ $employee->position->name.' - '.$employee->position->department->name }}
+        @else
+        {{ 'Not in any position, please contact HRD staff' }}
+        @endisset</p>
+        
       <hr>
       <strong><i class="fas fas fa-money-bill-wave mr-1"></i> Salary Range</strong>
-      <p class="text-muted">{{ $employee->salaryRange->name.' '.$employee->salaryRange->level->name }}</p>
-      <hr>
+      <p class="text-muted">@isset($employee->salaryRange)
+        {{ $employee->salaryRange->name.' '.$employee->salaryRange->level->name }}
+        @else
+        {{ "Not in any salary range, please contact HRD staff" }}
+      @endisset
+      </p>
       <strong><i class="fas fa-venus-mars mr-1"></i> Gender</strong>
       <p class="text-muted">{{ $employee->gender->name }}</p>
     </x-adminlte-card>

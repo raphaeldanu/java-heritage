@@ -11,7 +11,6 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('employees.index') }}">Employees</a></li>
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
@@ -32,7 +31,7 @@
         <div class="d-flex justify-content-center">
           <div class="img-circle elevation-2 d-flex bg-dark" style="width:65px;height:65px;">
             <i class="fas fa-2x fa-user text-silver m-auto"></i>
-        </div>
+          </div>
         </div>
         <h3 class="profile-username text-center">{{ $employee->name }}</h3>
         <p class="text-muted text-center">{{ $employee->nip }}</p>
@@ -56,32 +55,52 @@
       </p>
       <hr>
       <strong><i class="fas fa-id-badge mr-1"></i> Position - Department</strong>
-      <p class="text-muted">{{ $employee->position->name.' - '.$employee->position->department->name }}</p>
+      <p class="text-muted">@isset($employee->position)
+        {{ $employee->position->name.' - '.$employee->position->department->name }}
+        @else
+        {{ 'Not in any position, please contact HRD staff' }}
+        @endisset</p>
+        
       <hr>
       <strong><i class="fas fas fa-money-bill-wave mr-1"></i> Salary Range</strong>
-      <p class="text-muted">{{ $employee->salaryRange->name.' '.$employee->salaryRange->level->name }}</p>
+      <p class="text-muted">@isset($employee->salaryRange)
+        {{ $employee->salaryRange->name.' '.$employee->salaryRange->level->name }}
+        @else
+        {{ "Not in any salary range, please contact HRD staff" }}
+      @endisset
+      </p>
       <hr>
       <strong><i class="fas fa-venus-mars mr-1"></i> Gender</strong>
       <p class="text-muted">{{ $employee->gender->name }}</p>
     </x-adminlte-card>
   </div>
   <div class="col-md-6 col-lg-7">
-    <div class="card">
-      <div class="card-header p-2">
-        <ul class="nav nav-pills">
+    <div class="card card-teal card-tabs">
+      <div class="card-header p-0 pt-1">
+        <ul class="nav nav-tabs">
           <li class="nav-item"><a class="nav-link active" href="#details" data-toggle="tab">Details</a></li>
           {{-- @can('view', $employee->residence) --}}
-          <li class="nav-item"><a class="nav-link" href="#residence" data-toggle="tab">Residence</a></li>
+          <li class="nav-item"><a class="nav-link " href="#residence" data-toggle="tab">Residence</a></li>
           {{-- @endcan --}}
-          <li class="nav-item"><a class="nav-link" href="#families" data-toggle="tab">Families</a></li>
+          <li class="nav-item"><a class="nav-link " href="#families" data-toggle="tab">Families</a></li>
+          <li class="nav-item"><a class="nav-link" href="#leave" data-toggle="tab">Leave</a></li>
         </ul>
       </div><!-- /.card-header -->
       <div class="card-body">
         <div class="tab-content">
-          <div class="active tab-pane" id="details">
+          <div class="active tab-pane fade show" id="details">
             <dl>
-              <dt>BPJS Ketenagakerjaan</dt>
-              <dd>{{ $employee->bpjs_kes_number }}</dd>
+              <div class="row">
+                <div class="col-9">
+                  <dt>BPJS Ketenagakerjaan</dt>
+                  <dd>{{ $employee->bpjs_kes_number }}</dd>
+                </div>
+                <div class="col-3 d-flex justify-content-end align-items-center">
+                  @can('update', $employee)    
+                    <a href="{{ route('my-data.edit') }}" class="btn bg-teal">Edit Data</a>
+                    @endcan
+                </div>
+              </div>
               <dt>BPJS Kesehatan</dt>
               <dd>{{ $employee->bpjs_tk_number }}</dd>
               <dt>First Join Date</dt>
@@ -119,7 +138,7 @@
             </dl>
           </div>
           <!-- /.tab-pane -->
-          <div class="tab-pane" id="residence">
+          <div class="tab-pane fade" id="residence">
             @if (isset($employee->residence))
             <dl>
               <div class="row">
@@ -130,11 +149,11 @@
                 <div class="col-4">
                   <div class="d-flex justify-content-around align-items-center">
                     @can('update', [$employee->residence, $employee])
-                    <a href="{{ route('employees.edit-residence', ['employee' => $employee]) }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
+                    <a href="{{ route('my-data.edit-residence') }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
                     @endcan
                     @can('delete', [$employee->residence, $employee])
                     <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $employee->residence->id }}" theme="danger"/>
-                    <form method="post" action="{{ route('employees.destroy-residence', ['employee' => $employee]) }}">
+                    <form method="post" action="{{ route('my-data.destroy-residence') }}">
                       <x-adminlte-modal id="modalDelete{{ $employee->residence->id }}" title="Delete Employee Residence" theme="teal"
                           icon="fas fa-bolt" size='lg' disable-animations>
                           Are you sure you want to delete {{ $employee->name }} residence address?
@@ -153,7 +172,7 @@
             @else
             <div class="d-flex justify-content-center">
               @can('create', [App\Models\ResidenceAddress::class, $employee])    
-              <a href="{{ route('employees.create-residence', ['employee' => $employee]) }}" class="btn bg-teal">Add Residence Address</a>
+              <a href="{{ route('my-data.create-residence') }}" class="btn bg-teal">Add Residence Address</a>
               @else
               <dl>
                 <dt>Not authorized</dt>
@@ -164,11 +183,11 @@
             
           </div>
           <!-- /.tab-pane -->
-          <div class="tab-pane" id="families">
+          <div class="tab-pane fade" id="families">
             @if ($employee->families->isNotEmpty())
             <div class="d-flex justify-content-end mb-3">
               @can('create', [App\Models\Family::class, $employee])    
-                <a href="{{ route('families.create', ['employee' => $employee]) }}" class="btn bg-teal">Add Family Members</a>
+                <a href="{{ route('my-data.create-family') }}" class="btn bg-teal">Add Family Members</a>
               @endcan
             </div>
             <table class="table mt-3">
@@ -188,13 +207,13 @@
                   <td>{{ Str::headline($item->relationship->name) }}</td>
                   <td>
                     <div class="d-flex justify-content-around align-items-center">
-                      <a href="{{ route('families.show', ['employee' => $employee, 'family' => $item]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
+                      <a href="{{ route('my-data.show-family', ['family' => $item]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
                       @can('update', $item)
-                      <a href="{{ route('families.edit', ['employee' => $employee, 'family' => $item]) }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
+                      <a href="{{ route('my-data.edit-family', ['family' => $item]) }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
                       @endcan
                       @can('delete', $item)
                       <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $item->id }}" theme="danger"/>
-                      <form method="post" action="{{ route('families.destroy', ['employee' => $employee, 'family' => $item]) }}">
+                      <form method="post" action="{{ route('my-data.destroy-family', ['family' => $item]) }}">
                         <x-adminlte-modal id="modalDelete{{ $item->id }}" title="Delete Family Member" theme="teal"
                             icon="fas fa-bolt" size='lg' disable-animations>
                             Are you sure you want to delete {{ $item->name }}?
@@ -215,7 +234,7 @@
             @else
             <div class="d-flex justify-content-center">
               @can('create', [App\Models\Family::class, $employee])    
-              <a href="{{ route('families.create', ['employee' => $employee]) }}" class="btn bg-teal">Add Family Members</a>
+              <a href="{{ route('my-data.create-family') }}" class="btn bg-teal">Add Family Members</a>
               @else
               <dl>
                 <dt>Not authorized</dt>
@@ -226,20 +245,6 @@
             
           </div>
           <!-- /.tab-pane -->
-        </div>
-        <!-- /.tab-content -->
-      </div><!-- /.card-body -->
-    </div>
-    {{-- @if (auth()->user()->can('view')) --}}
-    <div class="card">
-      <div class="card-header p-2">
-        <ul class="nav nav-pills">
-          <li class="nav-item"><a class="nav-link active" href="#leave" data-toggle="tab">Leave</a></li>
-          <li class="nav-item"><a class="nav-link" href="#request" data-toggle="tab">Leave Request</a></li>
-        </ul>
-      </div><!-- /.card-header -->
-      <div class="card-body">
-        <div class="tab-content">
           <div class="active tab-pane" id="leave">
             @isset ($employee->leave)
             <dl>
@@ -259,22 +264,20 @@
             @endisset
           </div>
           <!-- /.tab-pane -->
-          <div class="tab-pane" id="request">
-            
-          </div>
-          <!-- /.tab-pane -->
         </div>
         <!-- /.tab-content -->
       </div><!-- /.card-body -->
     </div>
-    {{-- @endif --}}
   </div>
 </div>
 @else
 <x-adminlte-card theme="teal" theme-mode="outline">
-  <div class="d-flex justify-content-end mb-3">
-    @can('create', [App\Models\Family::class, $employee])    
-      <a href="{{ route('families.create', ['employee' => $employee]) }}" class="btn bg-teal">Add Family Members</a>
+  <dl>
+    <dd>Your data is empty</dd>
+  </dl>
+  <div class="d-flex justify-content-center">
+    @can('create', App\Models\Employee::class)    
+      <a href="{{ route('my-data.create') }}" class="btn bg-teal">Fill Data</a>
     @endcan
   </div>
 </x-adminlte-card>

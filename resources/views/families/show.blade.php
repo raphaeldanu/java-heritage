@@ -11,8 +11,12 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+        @if ($breadcrumb == 'employee')
         <li class="breadcrumb-item"><a href="{{ route('employees.index') }}">Employees</a></li>
         <li class="breadcrumb-item"><a href="{{ route('employees.show', ['employee' => $employee]) }}">{{ Str::before($employee->name, ' ') }}</a></li>
+        @elseif ($breadcrumb == 'my-data')
+        <li class="breadcrumb-item"><a href="{{ route('my-data.index') }}">My Data</a></li>
+        @endif
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
@@ -30,6 +34,10 @@
       <dt>Relation</dt>
       <dd>{{ Str::headline($family->relationship->name) }}</dd>
     </dl>
-    <a href="{{ route('employees.show', ['employee' => $employee]) }}" class="btn bg-teal float-right">Go Back</a>
+    <a href="@if ($breadcrumb == 'employee')
+    {{ route('employees.show', ['employee' => $employee]) }}
+    @else
+    {{ route('my-data.index') }}
+    @endif" class="btn bg-teal float-right">Go Back</a>
 </x-adminlte-card>
 @endsection

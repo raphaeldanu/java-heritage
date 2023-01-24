@@ -13,8 +13,14 @@ class UpdateResidenceAddressRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->user()->cannot('update', [$this->employee->residence, $this->employee])) {
-            return redirect()->route('employees.show', ['employee' => $this->employee])->with('warning', 'Not Authorized');
+        if ($this->routeIs('employee.*')){
+            if ($this->user()->cannot('update', [$this->employee->residence, $this->employee])) {
+                return redirect()->route('employees.show', ['employee' => $this->employee]);
+            }
+        } else if ($this->routeIs('my-data.*')){
+            if ($this->user()->cannot('update', [$this->user()->employee->residence, $this->user()->employee])) {
+                return redirect()->route('my-data.index');
+            }
         }
         return true;
     }
