@@ -1,18 +1,19 @@
 <?php
 
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\FamilyController;
-use App\Http\Controllers\LeaveRequestController;
-use App\Http\Controllers\LevelController;
-use App\Http\Controllers\MyDataController;
-use App\Http\Controllers\PositionController;
-use App\Http\Controllers\ResidenceAddressController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SalaryRangeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LevelController;
+use App\Http\Controllers\FamilyController;
+use App\Http\Controllers\MyDataController;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\SalaryRangeController;
+use App\Http\Controllers\LeaveRequestController;
+use App\Http\Controllers\LeaveApprovalController;
+use App\Http\Controllers\ResidenceAddressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +113,8 @@ Route::controller(MyDataController::class)->group(function () {
         Route::delete('my-data', 'destroy')->name('destroy');
     });
 });
+
+Route::resource('approve-leave-requests', LeaveApprovalController::class)->parameters(['approve-leave-requests' => 'leave_request'])->except(['create', 'store']);
 
 Route::resources([
     'roles' => RoleController::class,

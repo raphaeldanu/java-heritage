@@ -355,6 +355,24 @@ return [
             'active' => ['positions*'],
         ],
         [
+            'header' => 'SALARY ADMINISTRATIVE',
+            'can' => ['view-levels'],
+        ],
+        [
+            'text' => 'Employee Level',
+            'url'  => 'levels',
+            'icon' => 'fas fa-people-arrows',
+            'can' => 'view-levels',
+            'active' => ['levels*'],
+        ],
+        [
+            'text' => 'Salary Range',
+            'url'  => 'salary-ranges',
+            'icon' => 'fas fa-money-bill-wave',
+            'can' => 'view-salary-ranges',
+            'active' => ['salary-ranges*'],
+        ],
+        [
             'header' => 'EMPLOYEE MANAGEMENT',
             'can' => ['view-employees', 'approve-leave-requests', 'approve-all-leave-request']
         ],
@@ -373,22 +391,15 @@ return [
             'can' => ['approve-leave-requests', 'approve-all-leave-request'],
         ],
         [
-            'header' => 'SALARY ADMINISTRATIVE',
-            'can' => ['view-levels'],
+            'header' => 'EMPLOYEE DEVELOPMENT',
+            'can' => ['view-all-training-menus']
         ],
         [
-            'text' => 'Employee Level',
-            'url'  => 'levels',
-            'icon' => 'fas fa-people-arrows',
-            'can' => 'view-levels',
-            'active' => ['levels*'],
-        ],
-        [
-            'text' => 'Salary Range',
-            'url'  => 'salary-ranges',
-            'icon' => 'fas fa-money-bill-wave',
-            'can' => 'view-salary-ranges',
-            'active' => ['salary-ranges*'],
+            'text' => 'Training Menu',
+            'url'  => 'training-menus',
+            'icon' => 'fas fa-user-tie',
+            'can' => 'view-all-training-menus',
+            'active' => ['training-menus*'],
         ],
         ['header' => 'account_settings'],
         [

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Employee extends Model
 {
@@ -23,6 +24,8 @@ class Employee extends Model
      * @var array
      */
     protected $guarded = ['id'];
+    
+    protected $with = ['position'];
 
     /**
      * The attributes that should be cast to native types.
@@ -131,5 +134,15 @@ class Employee extends Model
     public function leaveRequests(): HasMany
     {
         return $this->hasMany(LeaveRequest::class);
+    }
+
+    /**
+     * Get the department associated with the Employee
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOneThrough
+     */
+    public function department(): HasOneThrough
+    {
+        return $this->hasOneThrough(Department::class, Position::class, 'id', 'id', 'position_id', 'department_id');
     }
 }

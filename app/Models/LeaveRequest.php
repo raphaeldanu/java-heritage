@@ -19,7 +19,7 @@ class LeaveRequest extends Model
      */
     protected $guarded = ['id'];
 
-    protected $with = ['employee:id,user_id,name'];
+    protected $with = ['employee:id,user_id,position_id,name'];
 
     /**
      * The attributes that should be cast to native types.

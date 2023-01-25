@@ -15,11 +15,17 @@ class LeaveRequestPolicy
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
+     * @param  string $mode
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user, string $mode)
     {
-        return isset($user->employee);
+        if ($mode == 'my-request') {
+            return isset($user->employee);
+        } elseif ($mode == 'other-request') {
+            return $user->can('view-all-leave-requests') or $user->can('view-leave-requests');
+        }
+        return false;
     }
 
     /**
@@ -70,7 +76,19 @@ class LeaveRequestPolicy
      */
     public function approve(User $user, LeaveRequest $leaveRequest)
     {
-        return $user->id != $leaveRequest->employee->user_id and ($user->can('approve-all-leave-requests') or $user->can('approve-leave-requests'));
+        if ($user->id == $leaveRequest->employee->user_id){
+            return false;
+        }
+        
+        if ($user->can('approve-all-leave-requests')) {
+            return true;
+        }
+
+        if ($user->can('approve-leave-requests')) {
+            return $user->employee->position->department_id == $leaveRequest->employee->position->department_id;
+        }
+
+        return false;
     }
 
     /**

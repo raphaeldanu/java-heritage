@@ -21,16 +21,13 @@
 @section('content')
 <div class="card">
   <div class="card-header">
-    <div class="card-title">
-        <a href="{{ route('leave-requests.create') }}" class="btn btn-primary">Request For Leave</a>
-    </div>
     <div class="card-tools">
       {{ $leave_requests->links() }}
     </div>
   </div>
   <!-- /.card-header -->
   <div class="card-body p-0">
-    <form action="{{ url('leave-requests') }}">
+    <form action="{{ url('approve-leave-requests') }}">
       <div class="row">
         <div class="col-6">
           <input type="text" name="search" class="form-control" placeholder="Search note" value="{{ request('search') }}">
@@ -61,6 +58,7 @@
       <thead>
         <tr>
           <th style="width: 10px">#</th>
+          <th>Name</th>
           <th>Date</th>
           <th>Type</th>
           <th>Status</th>
@@ -71,14 +69,15 @@
         @foreach ($leave_requests as $item)
         <tr>
           <td>{{ $loop->iteration }}</td>
+          <td>{{ $item->employee->name }}</td>
           <td>{{ date_format($item->start_date, "d F Y") }}</td>
           <td>{{ Str::headline($item->leave_type->name) }}</td>
           <td>{{ Str::headline($item->status->name) }}</td>
           <td>
             <div class="d-flex justify-content-around align-items-center">
-              <a href="{{ route('leave-requests.show', ['leave_request' => $item]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
-              @can('update', $item)
-              <a href="{{ route('leave-requests.edit', ['leave_request' => $item]) }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
+              <a href="{{ route('approve-leave-requests.show', ['leave_request' => $item]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
+              @can('approve', $item)
+              <a href="{{ route('approve-leave-requests.edit', ['leave_request' => $item]) }}" class="btn bg-warning"><i class="fas fa-stamp"></i></a>
               @endcan
               @can('delete', $item)
               <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $item->id }}" theme="danger"/>

@@ -27,7 +27,7 @@ class LeaveRequestController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        if ($user->cannot('viewAny', LeaveRequest::class)) {
+        if ($user->cannot('viewAny', [LeaveRequest::class, 'my-request'])) {
             return redirect()->route('home')->with('danger', 'Please fill your data first');
         }
 
@@ -159,7 +159,7 @@ class LeaveRequestController extends Controller
     public function edit(Request $request, LeaveRequest $leaveRequest)
     {
         if ($request->user()->cannot('update', $leaveRequest)) {
-            return redirect()->route('leave-requests.index')->with('warning', 'This request has been approved');
+            return redirect()->route('leave-requests.index')->with('warning', 'Not Authorized');
         }
 
         if($request->user()->employee->gender == Gender::Male){

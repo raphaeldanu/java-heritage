@@ -92,9 +92,12 @@ class DatabaseSeeder extends Seeder
             'create-families',
             'update-families',
             'delete-families',
+            'view-all-leave-requests',
             'view-leave-requests',
             'approve-all-leave-requests',
             'approve-leave-requests',
+            'delete-leave-requests',
+            'view-all-training-menus',
         ];
         $superAdmin = Role::create(['name' => 'Human Resource Manager']);
         $staff = Role::create(['name' => "Human Resource Staff"]);
@@ -139,7 +142,7 @@ class DatabaseSeeder extends Seeder
         $employee->leave()->create();
 
         $employee2 = $user2->employee()->create([
-            'position_id' => null,
+            'position_id' => 4,
             'salary_range_id' => 11,
             'nik' => '3374082509010007',
             'nip' => 'JH.0002',
@@ -163,7 +166,7 @@ class DatabaseSeeder extends Seeder
         $employee2->leave()->create();
 
         $employee3 = $user3->employee()->create([
-            'position_id' => 5,
+            'position_id' => 7,
             'salary_range_id' => 11,
             'nik' => '3374082509010009',
             'nip' => 'JH.0003',
@@ -187,8 +190,8 @@ class DatabaseSeeder extends Seeder
         $employee3->leave()->create();
 
         $employee4 = $user4->employee()->create([
-            'position_id' => null,
-            'salary_range_id' => null,
+            'position_id' => 6,
+            'salary_range_id' => 2,
             'nik' => '3374082509010010',
             'nip' => 'JH.0004',
             'bpjs_tk_number' => '01526084821',
@@ -212,7 +215,7 @@ class DatabaseSeeder extends Seeder
 
         $employee5 = $user5->employee()->create([
             'position_id' => 5,
-            'salary_range_id' => null,
+            'salary_range_id' => 18,
             'nik' => '3374082509010011',
             'nip' => 'JH.0005',
             'bpjs_tk_number' => '01526084822',
@@ -233,5 +236,28 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $employee5->leave()->create();
+
+        $employee2->leaveRequests()->create([
+            'leave_type' => 'melahirkan',
+            'start_date' => '2023-01-31',
+            'end_date' => '2023-03-01',
+            'status' => 'waiting',
+        ]);
+
+        $employee4->leaveRequests()->create([
+            'leave_type' => 'khitanan',
+            'start_date' => '2023-01-27',
+            'end_date' => '2023-02-03',
+            'status' => 'waiting',
+        ]);
+
+        $employee5->leaveRequests()->create([
+            'leave_type' => 'khitanan',
+            'start_date' => '2023-01-31',
+            'end_date' => '2023-02-01',
+            'status' => 'approved_with_note',
+            'note_from_approver' => 'Ojo kesuen',
+            'approved_by' => 1,
+        ]);
     }
 }
