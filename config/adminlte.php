@@ -374,7 +374,13 @@ return [
         ],
         [
             'header' => 'EMPLOYEE MANAGEMENT',
-            'can' => ['view-employees', 'approve-leave-requests', 'approve-all-leave-request']
+            'can' => [
+                'view-employees', 
+                'approve-leave-requests',
+                'view-all-leave-requests',            
+                'view-leave-requests',             
+                'approve-all-leave-request'
+            ],
         ],
         [
             'text' => 'Employee',
@@ -388,11 +394,16 @@ return [
             'url'  => 'approve-leave-requests',
             'icon' => 'fas fa-stamp',
             'active' => ['approve-leave-requests*'],
-            'can' => ['approve-leave-requests', 'approve-all-leave-request'],
+            'can' => [
+                'approve-leave-requests', 
+                'approve-all-leave-request', 
+                'view-all-leave-requests',
+                'view-leave-requests',
+            ],
         ],
         [
             'header' => 'EMPLOYEE DEVELOPMENT',
-            'can' => ['view-all-training-menus']
+            'can' => ['view-all-training-menus', 'view-all-training-subjects']
         ],
         [
             'text' => 'Training Menu',
@@ -400,6 +411,13 @@ return [
             'icon' => 'fas fa-user-tie',
             'can' => 'view-all-training-menus',
             'active' => ['training-menus*'],
+        ],
+        [
+            'text' => 'Training Subject',
+            'url'  => 'training-subjects',
+            'icon' => 'fas fa-user-tie',
+            'can' => 'view-all-training-subjects',
+            'active' => ['training-subjects*'],
         ],
         ['header' => 'account_settings'],
         [

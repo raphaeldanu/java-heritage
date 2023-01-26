@@ -95,7 +95,7 @@ class SalaryRangeSeeder extends Seeder
             ],
         ]);
 
-        $rankNFile2 = Level::create(['name' => 'Rank & File 2']);
+        $rankNFile2 = Level::create(['name' => 'Rank & File']);
         $rankNFile2->salaryRanges()->createMany([
             [
                 'name' => 'Low',

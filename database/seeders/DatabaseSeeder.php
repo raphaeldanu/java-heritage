@@ -98,6 +98,15 @@ class DatabaseSeeder extends Seeder
             'approve-leave-requests',
             'delete-leave-requests',
             'view-all-training-menus',
+            'view-training-menus',
+            'create-training-menus',
+            'update-training-menus',
+            'delete-training-menus',
+            'view-all-training-subjects',
+            'view-training-subjects',
+            'create-training-subjects',
+            'update-training-subjects',
+            'delete-training-subjects',
         ];
         $superAdmin = Role::create(['name' => 'Human Resource Manager']);
         $staff = Role::create(['name' => "Human Resource Staff"]);
@@ -115,6 +124,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PositionSeeder::class,
             SalaryRangeSeeder::class,
+            TrainingMenuSeeder::class,
         ]);
 
         $employee = $user->employee()->create([

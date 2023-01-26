@@ -14,6 +14,8 @@ use App\Http\Controllers\SalaryRangeController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveApprovalController;
 use App\Http\Controllers\ResidenceAddressController;
+use App\Http\Controllers\TrainingMenuController;
+use App\Http\Controllers\TrainingSubjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -124,4 +126,6 @@ Route::resources([
     'positions' => PositionController::class,
     'salary-ranges' => SalaryRangeController::class,
     'leave-requests' => LeaveRequestController::class,
+    'training-subjects' => TrainingSubjectController::class,
+    'training-menus' => TrainingMenuController::class,
 ]);
