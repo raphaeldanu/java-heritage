@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\TrainingMenu;
+use App\Models\Training;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TrainingMenuPolicy
+class TrainingPolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class TrainingMenuPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view-all-training-menus');
+        return $user->can('view-all-trainings');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\TrainingMenu  $trainingMenu
+     * @param  \App\Models\Training  $training
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, TrainingMenu $trainingMenu)
+    public function view(User $user, Training $training)
     {
-        return $user->can('view-training-menus');
+        return $user->can('view-trainings');
     }
 
     /**
@@ -41,30 +41,30 @@ class TrainingMenuPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create-training-menus');
+        return $user->can('create-trainings');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\TrainingMenu  $trainingMenu
+     * @param  \App\Models\Training  $training
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, TrainingMenu $trainingMenu)
+    public function update(User $user, Training $training)
     {
-        return $user->can('update-training-menus');
+        return $user->can('update-trainings');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\TrainingMenu  $trainingMenu
+     * @param  \App\Models\Training  $training
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, TrainingMenu $trainingMenu)
+    public function delete(User $user, Training $training)
     {
-        return $user->can('delete-training-menus');
+        return $user->can('delete-trainings');
     }
 }

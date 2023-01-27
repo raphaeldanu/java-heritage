@@ -14,6 +14,7 @@ use App\Http\Controllers\SalaryRangeController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveApprovalController;
 use App\Http\Controllers\ResidenceAddressController;
+use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\TrainingMenuController;
 use App\Http\Controllers\TrainingSubjectController;
 
@@ -118,6 +119,17 @@ Route::controller(MyDataController::class)->group(function () {
 
 Route::resource('approve-leave-requests', LeaveApprovalController::class)->parameters(['approve-leave-requests' => 'leave_request'])->except(['create', 'store']);
 
+Route::controller(TrainingController::class)->group(function () {
+    Route::name('trainings.')->group(function () {
+        Route::get('trainings/{training}/attendant', 'addAttendant')->name('add-attendants');
+        Route::get('trainings/{training}/edit/attendant', 'addAttendant')->name('edit-attendants');
+        Route::post('trainings/{training}/attendant/{employee}', 'storeAttendant')->name('store-attendants');
+        Route::put('trainings/{training}/attendant/{employee}', 'removeAttendant')->name('remove-attendants');
+        Route::post('trainings/{training}/edit/attendant/{employee}', 'storeAttendant')->name('store-edit-attendants');
+        Route::put('trainings/{training}/edit/attendant/{employee}', 'removeAttendant')->name('remove-edit-attendants');
+    });
+});
+
 Route::resources([
     'roles' => RoleController::class,
     'users' => UserController::class,
@@ -128,4 +140,5 @@ Route::resources([
     'leave-requests' => LeaveRequestController::class,
     'training-subjects' => TrainingSubjectController::class,
     'training-menus' => TrainingMenuController::class,
+    'trainings' => TrainingController::class,
 ]);

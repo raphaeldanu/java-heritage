@@ -16,9 +16,8 @@ class UpdateTrainingSubjectRequest extends FormRequest
     {
         if ($this->user()->cannot('update', $this->training_subject)) {
             return redirect()->route('training-subjects.index')->with('warning', 'Not Authorized');
-        } else {
-            return true;
-        }
+        } 
+        return true;
 
     }
 

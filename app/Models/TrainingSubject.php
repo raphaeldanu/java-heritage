@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TrainingSubject extends Model
 {
@@ -27,5 +28,15 @@ class TrainingSubject extends Model
         $query->when($keyword ?? false, fn($query, $keyword) => 
             $query->where('subject', 'like', '%' . $keyword . '%')
         );
+    }
+
+    /**
+     * Get all of the menu for the TrainingSubject
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function trainingMenu(): HasMany
+    {
+        return $this->hasMany(TrainingMenu::class);
     }
 }

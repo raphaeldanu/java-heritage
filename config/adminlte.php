@@ -408,16 +408,23 @@ return [
         [
             'text' => 'Training Menu',
             'url'  => 'training-menus',
-            'icon' => 'fas fa-user-tie',
+            'icon' => 'fas fa-book',
             'can' => 'view-all-training-menus',
             'active' => ['training-menus*'],
         ],
         [
             'text' => 'Training Subject',
             'url'  => 'training-subjects',
-            'icon' => 'fas fa-user-tie',
+            'icon' => 'fas fa-book-open',
             'can' => 'view-all-training-subjects',
             'active' => ['training-subjects*'],
+        ],
+        [
+            'text' => 'Training Master',
+            'url'  => 'trainings',
+            'icon' => 'fas fa-school',
+            'can' => 'view-all-trainings',
+            'active' => ['trainings*'],
         ],
         ['header' => 'account_settings'],
         [

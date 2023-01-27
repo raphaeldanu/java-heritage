@@ -17,10 +17,9 @@ return new class extends Migration
     {
         Schema::create('training_menus', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Department::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(TrainingSubject::class)->constrained();
+            $table->foreignIdFor(Department::class)->nullable()->constrained()->nullOnDelete();
             $table->string('title');
-            $table->string('type');
             $table->timestamps();
         });
     }

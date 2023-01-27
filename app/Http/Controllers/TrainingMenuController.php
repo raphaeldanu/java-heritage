@@ -3,19 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\TrainingMenu;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreTrainingMenuRequest;
 use App\Http\Requests\UpdateTrainingMenuRequest;
+use App\Models\Department;
+use App\Models\TrainingSubject;
 
 class TrainingMenuController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->user()->cannot('viewAny', TrainingMenu::class)) {
+            return redirectNotAuthorized('home');
+        }
+
+        $departments = Department::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name']] )->all();
+        
+        $subjects = TrainingSubject::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['subject']] )->all();
+
+        return view('training-menus.index', [
+            'title' => 'Training Menu',
+            'training_menus' => TrainingMenu::filters(request(['search', 'training_menu_id', 'department_id']))->orderBy('department_id')->paginate(15)->withQueryString(),
+            'departments' => $departments,
+            'subjects' => $subjects,
+        ]);
     }
 
     /**
@@ -23,9 +43,21 @@ class TrainingMenuController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        if ($request->user()->cannot('create', TrainingMenu::class)) {
+            return redirectNotAuthorized('training-menus');
+        }
+
+        $departments = Department::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name']] )->all();
+        
+        $subjects = TrainingSubject::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['subject']] )->all();
+
+        return view('training-menus.create', [
+            'title' => 'Create New Training Menu',
+            'departments' => $departments,
+            'subjects' => $subjects,
+        ]);
     }
 
     /**
@@ -36,7 +68,12 @@ class TrainingMenuController extends Controller
      */
     public function store(StoreTrainingMenuRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        if(TrainingMenu::create($validated)){
+            return redirect()->route('training-menus.index')->with('success', 'Training Menu saved successfully');
+        }
+        return back()->withInput()->with('danger', 'Cannot Save Training Menu');
     }
 
     /**
@@ -45,9 +82,16 @@ class TrainingMenuController extends Controller
      * @param  \App\Models\TrainingMenu  $trainingMenu
      * @return \Illuminate\Http\Response
      */
-    public function show(TrainingMenu $trainingMenu)
+    public function show(Request $request, TrainingMenu $trainingMenu)
     {
-        //
+        if ($request->user()->cannot('view', $trainingMenu)) {
+            return redirectNotAuthorized('home');
+        }
+
+        return view('training-menus.show', [
+            'title' => "Training Menu Details",
+            'training_menu' => $trainingMenu,
+        ]);
     }
 
     /**
@@ -56,9 +100,22 @@ class TrainingMenuController extends Controller
      * @param  \App\Models\TrainingMenu  $trainingMenu
      * @return \Illuminate\Http\Response
      */
-    public function edit(TrainingMenu $trainingMenu)
+    public function edit(Request $request, TrainingMenu $trainingMenu)
     {
-        //
+        if ($request->user()->cannot('update', $trainingMenu)) {
+            return redirectNotAuthorized('home');
+        }
+
+        $departments = Department::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name']] )->all();
+        
+        $subjects = TrainingSubject::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['subject']] )->all();
+
+        return view('training-menus.edit', [
+            'title' => 'Edit Training Menu',
+            'training_menu' => $trainingMenu,
+            'departments' => $departments,
+            'subjects' => $subjects,
+        ]);
     }
 
     /**
@@ -70,7 +127,11 @@ class TrainingMenuController extends Controller
      */
     public function update(UpdateTrainingMenuRequest $request, TrainingMenu $trainingMenu)
     {
-        //
+        $validated = $request->validated();
+        if ($trainingMenu->update($validated)){
+            return redirectWithAlert('training-menus', 'success', 'Successfully updated the Training Menu');
+        }
+        return back()->withInput()->with('danger', 'Cannot Update Training Menu');
     }
 
     /**
@@ -79,8 +140,15 @@ class TrainingMenuController extends Controller
      * @param  \App\Models\TrainingMenu  $trainingMenu
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TrainingMenu $trainingMenu)
+    public function destroy(Request $request, TrainingMenu $trainingMenu)
     {
-        //
+        if ($request->user()->cannot('delete', $trainingMenu)) {
+            return redirectNotAuthorized('home');
+        }
+
+        if($trainingMenu->delete()){
+            return redirectWithAlert('training-menus', 'success', 'Training Menu deleted successfully');
+        }
+        return redirectWithAlert('training-menus', 'danger', "Failed to delete training menu");
     }
 }

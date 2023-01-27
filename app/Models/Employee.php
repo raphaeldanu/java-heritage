@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Employee extends Model
@@ -144,5 +145,15 @@ class Employee extends Model
     public function department(): HasOneThrough
     {
         return $this->hasOneThrough(Department::class, Position::class, 'id', 'id', 'position_id', 'department_id');
+    }
+
+    /**
+     * The trainings that belong to the Training
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function trainings(): BelongsToMany
+    {
+        return $this->belongsToMany(Training::class, 'employee_training', 'employee_id', 'training_id');
     }
 }
