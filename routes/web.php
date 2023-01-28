@@ -128,6 +128,10 @@ Route::controller(TrainingController::class)->group(function () {
         Route::post('trainings/{training}/edit/attendant/{employee}', 'storeAttendant')->name('store-edit-attendants');
         Route::put('trainings/{training}/edit/attendant/{employee}', 'removeAttendant')->name('remove-edit-attendants');
     });
+    Route::name('my-trainings.')->group(function () {
+        Route::get('my-trainings', 'myIndex')->name('index');
+        Route::get('my-trainings/{training}', 'myShow')->name('show');
+    });
 });
 
 Route::resources([

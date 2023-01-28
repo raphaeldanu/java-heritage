@@ -11,7 +11,7 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('trainings.index') }}">Training</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('my-trainings.index') }}">My Training</a></li>
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
@@ -28,7 +28,7 @@
         <dd>{{ $training->trainingMenu->title }}</dd>
       </div>
       <div class="col-3 d-flex justify-content-end align-items-center">
-        <a href="{{ route('trainings.index') }}" class="btn bg-teal">Go back</a>
+        <a href="{{ route('my-trainings.index') }}" class="btn bg-teal">Go back</a>
       </div>
     </div>
     <dt>Training Subject</dt>
@@ -65,17 +65,6 @@
       <div class="card-title">
         <h5 class="mb-0">Attendants</h5>
       </div>
-      <div class="card-tools">
-        @if ($training->employees->isNotEmpty())
-          @can('update', $training)
-          <a href="{{ route('trainings.add-attendants', ['training' => $training]) }}" class="btn bg-teal">Edit Attendants</a>
-          @endcan
-        @else
-          @can('update', $training)
-          <a href="{{ route('trainings.add-attendants', ['training' => $training]) }}" class="btn bg-teal">Add Attendants</a>
-          @endcan
-        @endif
-      </div>
     </div>
   </div>
   <!-- /.card-header -->
@@ -99,7 +88,7 @@
     </table>
     @else
     <div class="d-flex justify-content-center">
-      No Attendants Yet
+      No Attendant Yet
     </div>
     @endif
   </div>

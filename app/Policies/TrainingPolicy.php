@@ -30,6 +30,10 @@ class TrainingPolicy
      */
     public function view(User $user, Training $training)
     {
+        if ($training->employees->contains($user->employee->id)) {
+            return true;
+        }
+
         return $user->can('view-trainings');
     }
 

@@ -56,9 +56,15 @@
         <h5 class="mb-0">Attendants</h5>
       </div>
       <div class="card-tools">
+      @if ($training->employees->isNotEmpty())
         @can('update', $training)
         <a href="{{ route('trainings.edit-attendants', ['training' => $training]) }}" class="btn bg-teal">Edit Attendants</a>
         @endcan
+      @else
+        @can('update', $training)
+        <a href="{{ route('trainings.edit-attendants', ['training' => $training]) }}" class="btn bg-teal">Add Attendants</a>
+        @endcan
+      @endif
       </div>
     </div>
   </div>
@@ -83,9 +89,7 @@
     </table>
     @else
     <div class="d-flex justify-content-center">
-      @can('update', $training)
-      <a href="{{ route('trainings.add-attendants', ['training' => $training]) }}" class="btn bg-teal">Add Attendants</a>
-      @endcan
+      No Attendants Yet
     </div>
     @endif
   </div>

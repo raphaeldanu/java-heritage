@@ -307,16 +307,22 @@ return [
             'icon' => 'fas fa-tachometer-alt'
         ],
         [
+            'text' => 'My Data',
+            'url'  => 'my-data',
+            'icon' => 'fas fa-address-card',
+            'active' => ['my-data*'],
+        ],
+        [
             'text' => 'My Leave Request',
             'url'  => 'leave-requests',
             'icon' => 'fas fa-mug-hot',
             'active' => ['leave-requests*'],
         ],
         [
-            'text' => 'My Data',
-            'url'  => 'my-data',
-            'icon' => 'fas fa-address-card',
-            'active' => ['my-data*'],
+            'text' => 'My Training',
+            'url'  => 'my-trainings',
+            'icon' => 'fas fa-dumbbell',
+            'active' => ['my-trainings*'],
         ],
         [
             'header' => 'USER MANAGEMENT',

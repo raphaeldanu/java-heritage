@@ -16,6 +16,7 @@ class TrainingController extends Controller
     public function __construct() {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -40,6 +41,35 @@ class TrainingController extends Controller
         return view('trainings.index', [
             'title' => 'Training',
             'trainings' => Training::filters(request(['training_date', 'training_menu_id', 'training_subject_id', 'department_id']))->orderBy('id', 'desc')->paginate(15)->withQueryString(),
+            'menus' => $menus,
+            'subjects' => $subjects,
+            'departments' => $departments,
+            'date_config' => $dateConfig,
+        ]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function myIndex(Request $request)
+    {
+        $employee = $request->user()->employee;
+        
+        $dateConfig = [
+            'format' => 'YYYY-MM-DD'
+        ];
+
+        $departments = Department::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name']] )->all();
+
+        $menus = TrainingMenu::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['title']] )->all();
+        
+        $subjects = TrainingSubject::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['subject']] )->all();
+
+        return view('trainings.my-index', [
+            'title' => 'My Training',
+            'trainings' => $employee->trainings()->filters(request(['training_menu_id', 'training_subject_id']))->orderBy('id', 'desc')->paginate(15)->withQueryString(),
             'menus' => $menus,
             'subjects' => $subjects,
             'departments' => $departments,
@@ -100,6 +130,24 @@ class TrainingController extends Controller
         }
 
         return view('trainings.show', [
+            'title' => 'Training Details',
+            'training' => $training,
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Training  $training
+     * @return \Illuminate\Http\Response
+     */
+    public function myShow(Request $request, Training $training)
+    {
+        if ($request->user()->cannot('view', $training)) {
+            return redirectNotAuthorized('trainings');
+        }
+
+        return view('trainings.my-show', [
             'title' => 'Training Details',
             'training' => $training,
         ]);
