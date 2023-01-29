@@ -385,7 +385,8 @@ return [
                 'approve-leave-requests',
                 'view-all-leave-requests',            
                 'view-leave-requests',             
-                'approve-all-leave-request'
+                'approve-all-leave-request',
+                'view-all-attendances'
             ],
         ],
         [
@@ -394,6 +395,13 @@ return [
             'icon' => 'fas fa-user-tie',
             'can' => 'view-employees',
             'active' => ['employees*'],
+        ],
+        [
+            'text' => 'Attendance',
+            'url'  => 'attendances',
+            'icon' => 'fas fa-user-tie',
+            'can' => 'view-all-attendances',
+            'active' => ['attendances*'],
         ],
         [
             'text' => 'Approve Leave Request',

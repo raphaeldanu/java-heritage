@@ -156,4 +156,14 @@ class Employee extends Model
     {
         return $this->belongsToMany(Training::class, 'employee_training', 'employee_id', 'training_id');
     }
+
+    /**
+     * Get all of the attendances for the Employee
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

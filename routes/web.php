@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
@@ -133,6 +134,17 @@ Route::controller(TrainingController::class)->group(function () {
         Route::get('my-trainings/{training}', 'myShow')->name('show');
     });
 });
+
+Route::controller(AttendanceController::class)->group(function () {
+    Route::name('attendances.')->group(function () {
+        Route::get('attendances/import', 'create')->name('import');
+        Route::post('attendances/import', 'store')->name('store');
+        Route::get('attendances/{employee}', 'showFromEmployee')->name('show-by-employee');
+        Route::get('attendances/{employee}/show/{attendance}', 'show')->name('show');
+    });
+});
+
+Route::resource('attendances', AttendanceController::class)->except(['create, store, show']);
 
 Route::resources([
     'roles' => RoleController::class,
