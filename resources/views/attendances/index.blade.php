@@ -24,12 +24,12 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-users')
-        <a href="{{ route('trainings.create') }}" class="btn btn-primary">Add New Training</a>
+      @can('create-attendances')
+        <a href="{{ route('attendances.import') }}" class="btn btn-primary">Import</a>
       @endcan
     </div>
     <div class="card-tools">
-      {{ $trainings->links() }}
+      {{ $employees->links() }}
     </div>
   </div>
   <!-- /.card-header -->

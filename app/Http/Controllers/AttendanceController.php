@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Attendance;
+use App\Models\Department;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Imports\AttendancesImport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
 
@@ -17,11 +21,19 @@ class AttendanceController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->cannot('viewAll', Attendance::class)) {
+        if ($request->user()->cannot('viewAny', Attendance::class)) {
             return redirectNotAuthorized('home');
         } 
 
         $employees = Employee::has('attendances')->filters(request(['search', 'department_id']))->with('department')->orderBy('id', 'ASC')->paginate(15)->withQueryString();
+
+        $departments = Department::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name']] )->all();
+
+        return view('attendances.index', [
+            'title' => "Attendances History",
+            'employees' => $employees,
+            'departments' => $departments,
+        ]);
     }
 
     /**
@@ -29,9 +41,15 @@ class AttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        if ($request->user()->cannot('create', Attendance::class)) {
+            return redirectNotAuthorized('attendances');
+        }
+
+        return view('attendances.create', [
+            'title' => 'Import Attendances',
+        ]);
     }
 
     /**
@@ -42,51 +60,30 @@ class AttendanceController extends Controller
      */
     public function store(StoreAttendanceRequest $request)
     {
-        //
+        $import = new AttendancesImport;
+        $import->import($request->file('attendance_files'));
+
+        return redirect()->route('attendances.index')->with('success', 'Data imported');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Attendance  $attendance
+     * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Attendance $attendance)
+    public function showByEmployee(Request $request, Employee $employee)
     {
-        //
-    }
+        if ($request->user()->cannot('view-attendances')){
+            return redirectNotAuthorized('attendances');
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Attendance  $attendance
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Attendance $attendance)
-    {
-        //
-    }
+        $attendances = Attendance::whereBelongsTo($employee)->orderBy('id', 'desc')->paginate(15);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateAttendanceRequest  $request
-     * @param  \App\Models\Attendance  $attendance
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateAttendanceRequest $request, Attendance $attendance)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Attendance  $attendance
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Attendance $attendance)
-    {
-        //
+        return view('attendances.show-per-employee', [
+            'title' => 'Attendances of '.Str::before($employee->name, ' '),
+            'attendances' => $attendances,
+            'employee' => $employee,
+        ]);
     }
 }

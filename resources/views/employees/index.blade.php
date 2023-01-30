@@ -87,7 +87,7 @@
               @can('delete', $item)
               <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $item->id }}" theme="danger"/>
               <form method="post" action="{{ route('employees.destroy', ['employee' => $item]) }}">
-                <x-adminlte-modal id="modalDelete{{ $item->id }}" title="Delete Role" theme="teal"
+                <x-adminlte-modal id="modalDelete{{ $item->id }}" title="Delete Employee" theme="teal"
                     icon="fas fa-bolt" size='lg' disable-animations>
                     Are you sure you want to delete {{ $item->name }}?
                       @csrf @method('delete')

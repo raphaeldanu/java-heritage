@@ -17,13 +17,15 @@ class Attendance extends Model
      */
     protected $guarded = ['id'];
 
+    protected $with = ['employee:id,name'];
+
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'scan_date' => 'datetime:Y-m-d H:i:s',
+        'scan_datetime' => 'datetime:Y-m-d H:i:s',
     ];
 
     /**

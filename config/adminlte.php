@@ -399,7 +399,7 @@ return [
         [
             'text' => 'Attendance',
             'url'  => 'attendances',
-            'icon' => 'fas fa-user-tie',
+            'icon' => 'fas fa-fingerprint',
             'can' => 'view-all-attendances',
             'active' => ['attendances*'],
         ],
@@ -638,6 +638,16 @@ return [
                     'type' => 'css',
                     'asset' => true,
                     'location' => 'vendor/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css',
+                ],
+            ],
+        ],
+        'BsCustomFileInput' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bs-custom-file-input/bs-custom-file-input.min.js',
                 ],
             ],
         ],

@@ -32,7 +32,7 @@ class UpdatePositionRequest extends FormRequest
             'name' => [
                 'required',
                 'string',
-                Rule::unique('positions')->where(fn ($query) => $query->where('department_id', $this->department_id))->whereNull('deleted_at')->ignore($this->position)
+                Rule::unique('positions')->where(fn ($query) => $query->where('department_id', $this->department_id))->ignore($this->position)
             ]
         ];
     }

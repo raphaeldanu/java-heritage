@@ -112,6 +112,11 @@ class DatabaseSeeder extends Seeder
             'create-trainings',
             'update-trainings',
             'delete-trainings',
+            'view-all-attendances',
+            'view-attendances',
+            'create-attendances',
+            'update-attendances',
+            'delete-attendances',
         ];
         $superAdmin = Role::create(['name' => 'Human Resource Manager']);
         $staff = Role::create(['name' => "Human Resource Staff"]);

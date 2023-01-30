@@ -139,12 +139,11 @@ Route::controller(AttendanceController::class)->group(function () {
     Route::name('attendances.')->group(function () {
         Route::get('attendances/import', 'create')->name('import');
         Route::post('attendances/import', 'store')->name('store');
-        Route::get('attendances/{employee}', 'showFromEmployee')->name('show-by-employee');
-        Route::get('attendances/{employee}/show/{attendance}', 'show')->name('show');
+        Route::get('attendances/{employee}', 'showByEmployee')->name('show-by-employee');
     });
 });
 
-Route::resource('attendances', AttendanceController::class)->except(['create, store, show']);
+Route::resource('attendances', AttendanceController::class)->only(['index']);
 
 Route::resources([
     'roles' => RoleController::class,
