@@ -325,6 +325,12 @@ return [
             'active' => ['my-trainings*'],
         ],
         [
+            'text' => 'My Attendances',
+            'url'  => 'my-attendances',
+            'icon' => 'fas fa-fingerprint',
+            'active' => ['my-attendances*'],
+        ],
+        [
             'header' => 'USER MANAGEMENT',
             'can' => ['view-roles', 'view-users'],
         ],
@@ -377,6 +383,13 @@ return [
             'icon' => 'fas fa-money-bill-wave',
             'can' => 'view-salary-ranges',
             'active' => ['salary-ranges*'],
+        ],
+        [
+            'text' => 'Employee Schedule',
+            'url'  => 'schedules',
+            'icon' => 'fas fa-calendar-alt',
+            'can' => ['view-all-schedules', 'view-schedules'],
+            'active' => ['schedules*'],
         ],
         [
             'header' => 'EMPLOYEE MANAGEMENT',

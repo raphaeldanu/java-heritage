@@ -11,6 +11,7 @@ use App\Http\Controllers\MyDataController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\SalaryRangeController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveApprovalController;
@@ -120,6 +121,7 @@ Route::controller(MyDataController::class)->group(function () {
 
 Route::resource('approve-leave-requests', LeaveApprovalController::class)->parameters(['approve-leave-requests' => 'leave_request'])->except(['create', 'store']);
 
+
 Route::controller(TrainingController::class)->group(function () {
     Route::name('trainings.')->group(function () {
         Route::get('trainings/{training}/attendant', 'addAttendant')->name('add-attendants');
@@ -141,9 +143,24 @@ Route::controller(AttendanceController::class)->group(function () {
         Route::post('attendances/import', 'store')->name('store');
         Route::get('attendances/{employee}', 'showByEmployee')->name('show-by-employee');
     });
+    Route::name('my-attendances.')->group(function () {
+        Route::get('my-attendances', 'myIndex')->name('index');
+    });
 });
 
 Route::resource('attendances', AttendanceController::class)->only(['index']);
+
+Route::controller(EmployeeScheduleController::class)->group(function () {
+    Route::name('schedules.')->group(function () {
+        Route::get('schedules/{employee}', 'showByEmployee')->name('show-by-employee');
+    });
+    Route::name('my-schedules.')->group(function () {
+        Route::get('my-schedules', 'myIndex')->name('index');
+    });
+});
+Route::resource('schedules', EmployeeScheduleController::class)->parameters([
+    'schedules' => 'employee_schedules'
+]);
 
 Route::resources([
     'roles' => RoleController::class,

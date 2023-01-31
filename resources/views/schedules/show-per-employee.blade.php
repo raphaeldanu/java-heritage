@@ -11,7 +11,7 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('attendances.index') }}">Attendances</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('schedules.index') }}">Schedules</a></li>
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
@@ -23,40 +23,41 @@
 <div class="card card-outline card-teal">
   <div class="card-header border-bottom-0">
     <div class="card-title">
-      <h5 class="mb-0">Attendances</h5>
+      <h5 class="mb-0">Schedules</h5>
     </div>
     <div class="card-tools">
-      {{ $attendances->links() }}
+      {{ $schedules->links() }}
     </div>
   </div>
   <!-- /.card-header -->
   <div class="card-body p-0 px-1">
-    @if ($attendances->isNotEmpty())
+    @if ($schedules->isNotEmpty())
     <table class="table">
       <thead>
         <tr>
           <th style="width: 10px">#</th>
-          <th>Date</th>
-          <th>Time</th>
-          <th>In & Out</th>
-          <th>Machine</th>
+          <th>Month</th>
+          <th>Year</th>
+          <th>Workdays</th>
+          <th class="col-2 text-center">Action</th>
         </tr>
       </thead>
       <tbody>
-        @foreach ($attendances as $item)
+        @foreach ($schedules as $item)
         <tr>
           <td>{{ $loop->iteration }}</td>
           <td>{{ date_format($item->scan_datetime, 'd F Y') }}</td>
           <td>{{ date_format($item->scan_datetime, 'H:i:s') }}</td>
           <td>{{ $item->in_out }}</td>
           <td>{{ $item->machine }}</td>
+          <td></td>
         </tr>
         @endforeach 
       </tbody>
     </table>
     @else
     <dt class="p-3">
-      Attendances is empty
+      Schedules is empty
     </dt>
     @endif
   </div>

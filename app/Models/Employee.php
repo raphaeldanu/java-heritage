@@ -166,4 +166,14 @@ class Employee extends Model
     {
         return $this->hasMany(Attendance::class);
     }
+
+    /**
+     * Get all of the schedule for the Employee
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function employeeSchedule(): HasMany
+    {
+        return $this->hasMany(EmployeeSchedule::class);
+    }
 }

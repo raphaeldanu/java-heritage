@@ -8,12 +8,15 @@ use App\Models\Department;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Imports\AttendancesImport;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StoreAttendanceRequest;
 use App\Http\Requests\UpdateAttendanceRequest;
 
 class AttendanceController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -82,6 +85,29 @@ class AttendanceController extends Controller
 
         return view('attendances.show-per-employee', [
             'title' => 'Attendances of '.Str::before($employee->name, ' '),
+            'attendances' => $attendances,
+            'employee' => $employee,
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Employee  $employee
+     * @return \Illuminate\Http\Response
+     */
+    public function myIndex(Request $request)
+    {
+        if ($request->user()->cannot('view-attendances')){
+            return redirectNotAuthorized('attendances');
+        }
+
+        $employee = $request->user()->employee;
+
+        $attendances = Attendance::whereBelongsTo($employee)->orderBy('id', 'desc')->paginate(15);
+
+        return view('attendances.my-index', [
+            'title' => 'My Attendances',
             'attendances' => $attendances,
             'employee' => $employee,
         ]);

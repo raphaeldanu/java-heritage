@@ -34,22 +34,22 @@
   </div>
   <!-- /.card-header -->
   <div class="card-body p-0">
-    <form action="{{ route('attendances.index') }}">
+    <form action="{{ route('schedules.index') }}">
       <div class="row px-1">
-        @can('view-all-attendances')
+        @can('view-all-schedules')
         <div class="col-8">
         @else
         <div class="col-11">
         @endcan
           <input type="text" name="search" class="form-control" placeholder="Search Employees" value="{{ request('search') }}">
         </div>
-        @can('view-all-attendances')
+        @can('view-all-schedules')
         @php
         $selected_department = [request('department_id')];
         @endphp
         <div class="col-3">
           <x-adminlte-select2 name="department_id" enable-old-support>
-            <x-adminlte-options empty-option="Select by departments" :options="$departments" :selected="$selected_department" />
+            <x-adminlte-options empty-option="Select by Department" :options="$departments" :selected="$selected_department" />
           </x-adminlte-select2>
         </div>
         @endcan
@@ -76,7 +76,7 @@
           <td>@isset($item->department) {{ $item->department->name }} @else {{ "Empty Department" }} @endisset</td>
           <td>
             <div class="d-flex justify-content-around align-items-center">
-              <a href="{{ route('attendances.show-by-employee', ['employee' => $item]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
+              <a href="{{ route('schedules.show-by-employee', ['employee' => $item]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
           </div>
           </td>
         </tr>
