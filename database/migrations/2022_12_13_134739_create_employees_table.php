@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('birth_place', 100);
             $table->date('birth_date');
             $table->string('gender', 6);
-            $table->string('tax_status');
+            $table->string('tax_status', 4);
             $table->text('address_on_id');
             $table->string('phone_number', 16);
             $table->string('blood_type')->nullable();

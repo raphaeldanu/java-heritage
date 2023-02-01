@@ -15,6 +15,7 @@ use App\Http\Controllers\EmployeeScheduleController;
 use App\Http\Controllers\SalaryRangeController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveApprovalController;
+use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\ResidenceAddressController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\TrainingMenuController;
@@ -175,4 +176,5 @@ Route::resources([
     'training-subjects' => TrainingSubjectController::class,
     'training-menus' => TrainingMenuController::class,
     'trainings' => TrainingController::class,
+    'ptkps' => PtkpController::class,
 ]);

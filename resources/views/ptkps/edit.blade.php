@@ -11,7 +11,7 @@
     <div class="col-sm-6">
       <ol class="breadcrumb float-sm-right">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('salary-ranges.index') }}">Salary Ranges</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('ptkps.index') }}">Ptkp</a></li>
         <li class="breadcrumb-item active">{{ $title }}</li>
       </ol>
     </div><!-- /.col -->
@@ -20,26 +20,23 @@
 @endsection
 
 @section('plugins.Select2', true)
-
+ 
 @section('content')
 <x-adminlte-card theme="teal" theme-mode="outline">
-  <form action="{{ route('salary-ranges.store') }}" method="POST">
+  <form action="{{ route('ptkps.update', ['ptkp' => $ptkp]) }}" method="POST">
     @csrf
-    <x-adminlte-input name="name" label="Salary Ranges Name" type="text" id="name" placeholder="Salary Ranges Name" enable-old-support/>
-    @php
-      $options = $levels->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name']] )->all();
-      @endphp
-    <x-adminlte-select2 name="level_id" label="Level" enable-old-support>
-      <x-adminlte-options empty-option="Select Level" :options="$options"/>
+    @method('PUT')
+    <x-adminlte-select2 name="tax_status" label="Tax Status" enable-old-support>
+      <x-adminlte-options empty-option="Select Tax Status" :options="$statusPajak" :selected="$ptkp->tax_status->value"/>
     </x-adminlte-select2>
-    <x-adminlte-input name="base_salary" label="Base Salary" type="number" id="base_salary" placeholder="Base Salary" enable-old-support>
+    <x-adminlte-input name="fee" label="Fee" type="number" id="fee" value="{{ number_format($ptkp->fee, 0, '', '') }}" placeholder="Fee" enable-old-support>
       <x-slot name="prependSlot">
         <div class="input-group-text">
           Rp
         </div>
       </x-slot>
     </x-adminlte-input>
-    <x-adminlte-button type="submit" label="Save" theme="primary" class="d-flex ml-auto" name="submit"/>
+    <x-adminlte-button type="submit" label="Submit" theme="primary" class="d-flex ml-auto" name="submit"/>
   </form>
 </x-adminlte-card>
 @endsection
