@@ -243,14 +243,12 @@
       <div class="card-header p-2">
         <ul class="nav nav-pills">
           <li class="nav-item"><a class="nav-link active" href="#leave" data-toggle="tab">Leave</a></li>
-          <li class="nav-item"><a class="nav-link" href="#request" data-toggle="tab">Leave Request</a></li>
         </ul>
       </div><!-- /.card-header -->
       <div class="card-body">
         <div class="tab-content">
           <div class="active tab-pane" id="leave">
             @isset ($employee->leave)
-            
             <div class="row">
               <div class="col-8">
                 <dl>

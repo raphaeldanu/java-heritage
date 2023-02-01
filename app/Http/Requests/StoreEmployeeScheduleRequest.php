@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\EmployeeSchedule;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreEmployeeScheduleRequest extends FormRequest
 {
@@ -13,7 +16,11 @@ class StoreEmployeeScheduleRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        if ($this->user()->cannot('create', EmployeeSchedule::class)){
+            return redirect()->route('schedules.index')->with('warning', 'Not Authorized');
+        }
+
+        return true;
     }
 
     /**
@@ -24,7 +31,13 @@ class StoreEmployeeScheduleRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'employee_id' => 'required',
+            'month_and_year' => [
+                'required',
+                'date',
+                Rule::unique('employee_schedules')->where(fn ($query) => $query->where('employee_id', $this->employee_id)),
+            ],
+            'workdays' => 'required|numeric|max:28'
         ];
     }
 }

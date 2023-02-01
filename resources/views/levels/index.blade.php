@@ -65,7 +65,7 @@
               @can('delete', $level)
               <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $level->id }}" theme="danger"/>
               <form method="post" action="{{ route('levels.destroy', ['level' => $level]) }}">
-                <x-adminlte-modal id="modalDelete{{ $level->id }}" title="Delete Role" theme="teal"
+                <x-adminlte-modal id="modalDelete{{ $level->id }}" title="Delete Salary Level" theme="teal"
                     icon="fas fa-bolt" size='lg' disable-animations>
                     Are you sure you want to delete {{ $level->name }}?
                       @csrf @method('delete')

@@ -109,7 +109,7 @@
               @can('delete', $user)
               <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $user->id }}" theme="danger"/>
               <form method="post" action="/users/{{ $user->id }}">
-                <x-adminlte-modal id="modalDelete{{ $user->id }}" title="Delete Role" theme="teal"
+                <x-adminlte-modal id="modalDelete{{ $user->id }}" title="Delete User" theme="teal"
                     icon="fas fa-bolt" size='lg' disable-animations>
                     Are you sure you want to delete {{ $user->username }}?
                       @csrf @method('delete')

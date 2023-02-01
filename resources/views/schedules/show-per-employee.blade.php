@@ -23,7 +23,9 @@
 <div class="card card-outline card-teal">
   <div class="card-header border-bottom-0">
     <div class="card-title">
-      <h5 class="mb-0">Schedules</h5>
+      @can('create-schedules')
+        <a href="{{ route('schedules.create', ['employee' => $employee]) }}" class="btn btn-primary">Create New Schedule</a>
+      @endcan
     </div>
     <div class="card-tools">
       {{ $schedules->links() }}
@@ -46,11 +48,31 @@
         @foreach ($schedules as $item)
         <tr>
           <td>{{ $loop->iteration }}</td>
-          <td>{{ date_format($item->scan_datetime, 'd F Y') }}</td>
-          <td>{{ date_format($item->scan_datetime, 'H:i:s') }}</td>
-          <td>{{ $item->in_out }}</td>
-          <td>{{ $item->machine }}</td>
-          <td></td>
+          <td>{{ date_format($item->month_and_year, 'F') }}</td>
+          <td>{{ date_format($item->month_and_year, 'Y') }}</td>
+          <td>{{ $item->workdays }}</td>
+          <td>
+            <div class="d-flex justify-content-around align-items-center">
+            <a href="{{ route('schedules.show', ['employee_schedule' => $item]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>
+            @can('update', $item)
+            <a href="{{ route('schedules.edit', ['employee_schedule' => $item]) }}" class="btn bg-warning"><i class="fas fa-edit"></i></a>
+            @endcan
+            @can('delete', $item)
+            <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $item->id }}" theme="danger"/>
+            <form method="post" action="{{ route('schedules.destroy', ['employee_schedule' => $item]) }}">
+              <x-adminlte-modal id="modalDelete{{ $item->id }}" title="Delete Schedule" theme="teal"
+                  icon="fas fa-bolt" size='lg' disable-animations>
+                  Are you sure you want to delete {{ $item->name }}?
+                    @csrf @method('delete')
+                    <x-slot name="footerSlot">
+                      <x-adminlte-button type="submit" name="submit" class="mr-auto" theme="success" label="Yes"/>
+                      <x-adminlte-button theme="danger" label="No" data-dismiss="modal"/>
+                  </x-slot>
+              </x-adminlte-modal>
+            </form>
+            @endcan
+            </div>
+          </td>
         </tr>
         @endforeach 
       </tbody>

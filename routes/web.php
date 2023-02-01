@@ -152,15 +152,17 @@ Route::resource('attendances', AttendanceController::class)->only(['index']);
 
 Route::controller(EmployeeScheduleController::class)->group(function () {
     Route::name('schedules.')->group(function () {
-        Route::get('schedules/{employee}', 'showByEmployee')->name('show-by-employee');
+        Route::get('schedules/of/{employee}', 'showByEmployee')->name('show-by-employee');
+        Route::get('schedules/of/{employee}/create', 'create')->name('create');
     });
     Route::name('my-schedules.')->group(function () {
         Route::get('my-schedules', 'myIndex')->name('index');
     });
 });
+
 Route::resource('schedules', EmployeeScheduleController::class)->parameters([
-    'schedules' => 'employee_schedules'
-]);
+    'schedules' => 'employee_schedule'
+])->except(['create']);
 
 Route::resources([
     'roles' => RoleController::class,

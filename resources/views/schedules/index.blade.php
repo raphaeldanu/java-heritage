@@ -24,9 +24,7 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-attendances')
-        <a href="{{ route('attendances.import') }}" class="btn btn-primary">Import</a>
-      @endcan
+      
     </div>
     <div class="card-tools">
       {{ $employees->links() }}

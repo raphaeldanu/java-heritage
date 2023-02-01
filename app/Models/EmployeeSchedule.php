@@ -17,13 +17,15 @@ class EmployeeSchedule extends Model
      */
     protected $guarded = ['id'];
 
+    protected $with = ['employee'];
+
     /**
      * The attributes that should be cast to native types.
      *
      * @var array
      */
     protected $casts = [
-        'month' => 'date:Y-m-d',
+        'month_and_year' => 'date:Y-m-d',
     ];
 
     /**
