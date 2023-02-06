@@ -23,11 +23,11 @@
 <x-adminlte-card theme="teal" theme-mode="outline">
   <dl>
     <dt>Salary Range Name</dt>
-    <dd>{{ $salaryRanges->name }}</dd>
+    <dd>{{ $salaryRange->name }}</dd>
     <dt>Employee Level</dt>
-    <dd>{{ $salaryRanges->level->name }}</dd>
+    <dd>{{ $salaryRange->level->name }}</dd>
     <dt>Base Salary</dt>
-    <dd>Rp {{ $salaryRange->base_salary }}</dd>
+    <dd>Rp {{ number_format($salaryRange->base_salary, 2, ',', '.') }}</dd>
   </dl>
 </x-adminlte-card>
 @endsection

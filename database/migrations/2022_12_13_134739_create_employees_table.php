@@ -38,6 +38,7 @@ return new class extends Migration
             $table->text('address_on_id');
             $table->string('phone_number', 16);
             $table->string('blood_type')->nullable();
+            $table->timestamp('resign_date')->nullable();
             $table->timestamps();
         });
     }

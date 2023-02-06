@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Ptkp;
+use App\Models\Salary;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PtkpPolicy
+class SalaryPolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class PtkpPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view-all-ptkps');
+        return $user->can('view-all-salaries');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Ptkp  $ptkp
+     * @param  \App\Models\Salary  $salary
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Ptkp $ptkp)
+    public function view(User $user, Salary $salary)
     {
-        return $user->can('view-ptkps');
+        return $user->can('view-salaries');
     }
 
     /**
@@ -41,30 +41,30 @@ class PtkpPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create-ptkps');
+        return $user->can('create-salaries');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Ptkp  $ptkp
+     * @param  \App\Models\Salary  $salary
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Ptkp $ptkp)
+    public function update(User $user, Salary $salary)
     {
-        return $user->can('update-ptkps');
+        return $user->can('update-salaries');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Ptkp  $ptkp
+     * @param  \App\Models\Salary  $salary
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Ptkp $ptkp)
+    public function delete(User $user, Salary $salary)
     {
-        return $user->can('delete-ptkps');
+        return $user->can('delete-salaries');
     }
 }

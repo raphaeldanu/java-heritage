@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Employee;
 use App\Models\Attendance;
 use App\Models\Department;
@@ -98,10 +99,6 @@ class AttendanceController extends Controller
      */
     public function myIndex(Request $request)
     {
-        if ($request->user()->cannot('view-attendances')){
-            return redirectNotAuthorized('attendances');
-        }
-
         $employee = $request->user()->employee;
 
         $attendances = Attendance::whereBelongsTo($employee)->orderBy('id', 'desc')->paginate(15);

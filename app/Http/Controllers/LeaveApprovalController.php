@@ -52,6 +52,9 @@ class LeaveApprovalController extends Controller
         }
 
         $title = 'Department Leave Requests';
+        if($user->can('view-all-leave-requests')){
+            $title = 'All Leave Requests';
+        }
 
         return view('leave-requests-approval.index', [
             'title' => $title,

@@ -26,6 +26,8 @@
     @csrf
     @method('PUT')
     <x-adminlte-input name="annual" type="number" placeholder="Annual Leave" label="Annual Leave" value="{{ $leave->annual }}" enable-old-support/>
+    <x-adminlte-input name="dp" type="number" placeholder="Day of Payment" label="Day of Payment" value="{{ $leave->dp }}" enable-old-support/>
+    <x-adminlte-input name="extra_off" type="number" placeholder="Extra Off" label="Extra Off" value="{{ $leave->extra_off }}" enable-old-support/>
     <x-adminlte-button type="submit" label="Update" theme="primary" class="d-flex ml-auto" name="submit"/>
   </form>
 </x-adminlte-card>

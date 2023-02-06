@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Ptkp;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Level;
@@ -83,6 +84,7 @@ class DatabaseSeeder extends Seeder
             'create-employees',
             'update-employees',
             'delete-employees',
+            'export-employees',
             'update-employee-leave',
             'view-residence',
             'create-residence',
@@ -117,11 +119,21 @@ class DatabaseSeeder extends Seeder
             'create-attendances',
             'update-attendances',
             'delete-attendances',
+            'view-all-ptkps',
+            'view-ptkps',
+            'create-ptkps',
+            'update-ptkps',
+            'delete-ptkps',
             'view-all-schedules',
             'view-schedules',
             'create-schedules',
             'update-schedules',
             'delete-schedules',
+            'view-all-salaries',
+            'view-salaries',
+            'create-salaries',
+            'update-salaries',
+            'delete-salaries',
         ];
         $superAdmin = Role::create(['name' => 'Human Resource Manager']);
         $staff = Role::create(['name' => "Human Resource Staff"]);
@@ -284,5 +296,44 @@ class DatabaseSeeder extends Seeder
             'note_from_approver' => 'Ojo kesuen',
             'approved_by' => 1,
         ]);
+
+        $ptkps = [
+            [
+                'tax_status' => 'TK0',
+                'fee' => 54000000,
+            ],
+            [
+                'tax_status' => 'TK1',
+                'fee' => 58500000,
+            ],
+            [
+                'tax_status' => 'TK2',
+                'fee' => 63000000,
+            ],
+            [
+                'tax_status' => 'TK3',
+                'fee' => 67500000,
+            ],
+            [
+                'tax_status' => 'K0',
+                'fee' => 58500000,
+            ],
+            [
+                'tax_status' => 'K1',
+                'fee' => 63000000,
+            ],
+            [
+                'tax_status' => 'K2',
+                'fee' => 67500000,
+            ],
+            [
+                'tax_status' => 'K3',
+                'fee' => 72000000,
+            ],
+        ];
+
+        foreach ($ptkps as $ptkp) {
+            Ptkp::create($ptkp);
+        }
     }
 }

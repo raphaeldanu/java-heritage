@@ -25,6 +25,8 @@
       @can('create-users')
         <a href="{{ route('employees.pick-user') }}" class="btn btn-primary">Create New Employee</a>
       @endcan
+      <a href="{{ route('employees.export-turn-over') }}" class="btn btn-primary">Export Turn Over</a>
+      <a href="{{ route('employees.export-ratio') }}" class="btn btn-primary">Export Rasio Karyawan</a>
     </div>
     <div class="card-tools">
       {{ $employees->links() }}

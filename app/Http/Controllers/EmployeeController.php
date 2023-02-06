@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Enums\Gender;
 use App\Models\Leave;
@@ -14,7 +15,13 @@ use App\Models\SalaryRange;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Enums\EmploymentStatus;
+use Illuminate\Support\Facades\DB;
+use App\Exports\EmployeeRatioExport;
+use App\Exports\MonthlyDailyWorkerExport;
+use App\Http\Requests\UpdateLeaveRequest;
+use App\Exports\MonthlyEmployeeHireExport;
 use App\Http\Requests\StoreEmployeeRequest;
+use App\Exports\MonthlyEmployeeResignExport;
 use App\Http\Requests\UpdateEmployeeRequest;
 use sirajcse\UniqueIdGenerator\UniqueIdGenerator;
 use App\Http\Requests\StoreResidenceAddressRequest;
@@ -277,6 +284,14 @@ class EmployeeController extends Controller
             }
         }
 
+        if ($employee->employment_status != $request->employment_status and $request->employment_status == EmploymentStatus::Resigned){
+            $validated['resign_date'] = DB::raw('CURRENT_TIMESTAMP');
+        }
+
+        if ($employee->employment_status != $request->employment_status and $employee->employment_status == EmploymentStatus::Resigned){
+            $validated['resign_date'] = null;
+        }
+
         if($employee->update($validated)){
             return redirectWithAlert('employees', 'success', 'Employee Updated Successfully');
         }
@@ -302,6 +317,76 @@ class EmployeeController extends Controller
         }
 
         return redirectWithAlert('employees', 'success', 'Employee detail deleted successfully');
+    }
+
+    public function exportTurnOver(Request $request)
+    {
+        if ($request->user()->cannot('export-employees')) {
+            return redirectNotAuthorized('employees');
+        }
+
+        $types = [
+            'hire' => "New Hire",
+            'resign' => "Resign",
+            'daily_worker' => "Daily Worker",
+        ];
+
+        $dateConfig = [
+            'format' => 'YYYY-MM'
+          ];
+
+        return view('employees.pick-date-export', [
+            'title' => 'Export Turn Over Employee',
+            'types' => $types,
+            'dateConfig' => $dateConfig,
+        ]);
+    }
+
+    public function exportRatio(Request $request)
+    {
+        if ($request->user()->cannot('export-employees')) {
+            return redirectNotAuthorized('employees');
+        }
+
+        $employee = Employee::where('employment_status', '!=', EmploymentStatus::Resigned)->get();
+        $departments = Department::all();
+        $data = [];
+        foreach ($departments as $item) {
+            $male_permanent = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('gender', Gender::Male)->where('employment_status', EmploymentStatus::Permanent)->count();
+            $female_permanent = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('gender', Gender::Female)->where('employment_status', EmploymentStatus::Permanent)->count();
+            $male_contract = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('gender', Gender::Male)->where('employment_status', EmploymentStatus::Contract)->count();
+            $female_contract = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('gender', Gender::Female)->where('employment_status', EmploymentStatus::Contract)->count();
+            $daily_worker = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('employment_status', EmploymentStatus::DailyWorker)->count();
+            array_push($data, collect([
+                'name' => $item->name,
+                'male_permanent' => $male_permanent,
+                'female_permanent' => $female_permanent,
+                'male_contract' => $male_contract,
+                'female_contract' => $female_contract,
+                'daily_worker' => $daily_worker,
+                'total' => $male_permanent+$female_permanent+$male_contract+$female_contract+$daily_worker,
+            ]));
+        }
+
+        return (new EmployeeRatioExport(collect($data)))->download('employee-ratio.xlsx');
+    }
+
+    public function export(Request $request)
+    {
+        if ($request->user()->cannot('export-employees')) {
+            return redirectNotAuthorized('employees');
+        }
+        
+        $type = $request->type;
+        $month_and_year = Carbon::parse($request->month_and_year);
+
+        if ($type == 'hire'){
+            return (new MonthlyEmployeeHireExport($month_and_year))->download('employee-hire.xlsx');
+        } elseif ($type == 'resign'){
+            return (new MonthlyEmployeeResignExport($month_and_year))->download('employee-resign.xlsx');
+        } elseif ($type == 'daily_worker') {
+            return (new MonthlyDailyWorkerExport($month_and_year))->download('daily-worker.xlsx');
+        }
     }
 
     // LEAVE
@@ -341,6 +426,23 @@ class EmployeeController extends Controller
             'leave' => $leave,
             'employee' => $employee,
         ]);
+    }
+
+    /**
+     * Edit leave of employee.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateLeave(UpdateLeaveRequest $request, Employee $employee, Leave $leave)
+    {
+        if($request->user()->cannot('update', $leave)){
+            return redirect()->route('employees.show', ['employee' => $employee])->with('warning', 'Not Authorized');
+        }
+
+        $validated = $request->validated();
+        $leave->update($validated);
+        return redirect()->route('employees.show', ['employee' => $employee]);
     }
 
     //RESIDENCE

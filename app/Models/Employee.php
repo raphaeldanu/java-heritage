@@ -172,7 +172,7 @@ class Employee extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function employeeSchedule(): HasMany
+    public function employeeSchedules(): HasMany
     {
         return $this->hasMany(EmployeeSchedule::class);
     }

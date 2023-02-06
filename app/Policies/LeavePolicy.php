@@ -42,10 +42,6 @@ class LeavePolicy
      */
     public function update(User $user, Leave $leave)
     {
-        if ($user->cannot('update-employee-leave')) {
-            return false;
-        }
-
-        return true;
+        return $user->can('update-employee-leave');
     }
 }

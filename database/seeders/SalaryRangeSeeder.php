@@ -115,7 +115,7 @@ class SalaryRangeSeeder extends Seeder
         $dailyWorker->salaryRanges()->createMany([
             [
                 'name' => 'Standart',
-                'base_salary' => 79330, 
+                'base_salary' => 1983261, 
             ],
         ]);
     }

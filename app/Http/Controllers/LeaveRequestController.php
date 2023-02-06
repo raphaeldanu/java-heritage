@@ -110,7 +110,7 @@ class LeaveRequestController extends Controller
                 $days = $period->count();
             }
             
-            if ($employee->leave->annual < $days) {
+            if ($employee->leave->annual) {
                 return back()->withInput();
             } else {
                 $leave = $employee->leave;

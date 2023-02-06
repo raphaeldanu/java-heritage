@@ -12,11 +12,13 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeScheduleController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SalaryRangeController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveApprovalController;
 use App\Http\Controllers\PtkpController;
 use App\Http\Controllers\ResidenceAddressController;
+use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\TrainingMenuController;
 use App\Http\Controllers\TrainingSubjectController;
@@ -49,6 +51,9 @@ Route::get('/home', function() {
     return view('home');
 })->name('home')->middleware('auth');
 
+Route::get('account/change-password', [HomeController::class, 'editPassword']);
+Route::put('account/change-password', [HomeController::class, 'updatePassword'])->name('profile.update-password');
+
 // Users Routes 
 Route::put('users/{user}/change-status', [UserController::class, 'changeStatus'])->name('users.change-status');
 Route::put('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
@@ -57,6 +62,9 @@ Route::put('users/{user}/change-password', [UserController::class, 'changePasswo
 Route::controller(EmployeeController::class)->group(function () {
     Route::name('employees.')->group(function () {
         Route::get('employees/pick-user/', 'pickUser')->name('pick-user');
+        Route::get('employees/export-turn-over', 'exportTurnOver')->name('export-turn-over');
+        Route::get('employees/export-ratio', 'exportRatio')->name('export-ratio');
+        Route::post('employees/export-turn-over', 'export')->name('export');
         Route::get('employees/create/{user}', 'create')->name('create');
         Route::post('employees/{employee}/leave', 'addLeave')->name('add-leave');
         Route::put('employees/{employee}/leave/', 'updateLeave')->name('update-leave');
@@ -161,9 +169,20 @@ Route::controller(EmployeeScheduleController::class)->group(function () {
     });
 });
 
+Route::controller(SalaryController::class)->group(function () {
+    Route::name('salaries.')->group(function () {
+        Route::get('salaries/of/{employee}', 'showByEmployee')->name('show-by-employee');
+        Route::get('sarlaries/of/{employee}/create', 'createByEmployee')->name('create-by-employee');
+        Route::get('salaries/check-workdays', 'checkWorkdays')->name('check-workdays');
+        Route::get('salaries/{salary}/export', 'export')->name('export');
+    });
+});
+
 Route::resource('schedules', EmployeeScheduleController::class)->parameters([
     'schedules' => 'employee_schedule'
 ])->except(['create']);
+
+Route::resource('salaries', SalaryController::class)->except(['update', 'edit']);
 
 Route::resources([
     'roles' => RoleController::class,
@@ -177,4 +196,5 @@ Route::resources([
     'training-menus' => TrainingMenuController::class,
     'trainings' => TrainingController::class,
     'ptkps' => PtkpController::class,
+    
 ]);

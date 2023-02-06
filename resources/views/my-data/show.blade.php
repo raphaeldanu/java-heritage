@@ -245,7 +245,7 @@
             
           </div>
           <!-- /.tab-pane -->
-          <div class="active tab-pane" id="leave">
+          <div class="tab-pane fade" id="leave">
             @isset ($employee->leave)
             <dl>
               <dt>Annual</dt>

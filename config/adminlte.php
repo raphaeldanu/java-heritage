@@ -392,6 +392,20 @@ return [
             'active' => ['schedules*'],
         ],
         [
+            'text' => 'PTKP',
+            'url'  => 'ptkps',
+            'icon' => 'fas fa-receipt',
+            'can' => ['view-all-ptkps', 'view-ptkps'],
+            'active' => ['ptkps*'],
+        ],
+        [
+            'text' => 'Salary Master',
+            'url'  => 'salaries',
+            'icon' => 'fas fa-file-invoice-dollar',
+            'can' => ['view-all-salaries', 'view-salaries'],
+            'active' => ['salaries*'],
+        ],
+        [
             'header' => 'EMPLOYEE MANAGEMENT',
             'can' => [
                 'view-employees', 
@@ -456,46 +470,8 @@ return [
         ['header' => 'account_settings'],
         [
             'text' => 'change_password',
-            'url'  => 'admin/settings',
+            'url'  => 'account/change-password',
             'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text'    => 'multilevel',
-            'icon'    => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-                [
-                    'text'    => 'level_one',
-                    'url'     => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url'  => '#',
-                        ],
-                        [
-                            'text'    => 'level_two',
-                            'url'     => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url'  => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url'  => '#',
-                ],
-            ],
         ],
     ],
 
