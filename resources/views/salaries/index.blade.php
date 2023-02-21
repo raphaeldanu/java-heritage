@@ -24,9 +24,7 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-salaries')
-        <a href="{{ route('salaries.create') }}" class="btn btn-primary">Generate Salary</a>
-      @endcan
+      
     </div>
     <div class="card-tools">
       {{ $employees->links() }}

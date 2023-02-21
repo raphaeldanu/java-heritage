@@ -19,8 +19,15 @@ class EmployeePolicy
      */
     public function view(User $user, Employee $employee)
     {
-        if ($user->can('view-employee-detail')) {
+        if ($user->can('view-all-employees-detail')) {
             return true;
+        }
+
+        if ($user->can('view-employees-detail')) {
+            if (!isset($user->employee->position)){
+                return false;
+            }
+            return $user->employee->position->department_id == $employee->position->department_id;
         }
 
         if ($user->id == $employee->user_id) {

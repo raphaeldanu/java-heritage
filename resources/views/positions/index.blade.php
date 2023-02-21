@@ -22,7 +22,7 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-users')
+      @can('create-positions')
         <a href="{{ route('positions.create') }}" class="btn btn-primary">Create New Position</a>
       @endcan
     </div>

@@ -270,7 +270,7 @@
             </div>
             @else
             <div class="d-flex justify-content-center">
-              @can('create-employees')
+              @can('update-employees')
               <form action="{{ route('employees.add-leave', ['employee' => $employee]) }}" method="post">
                 @csrf
                 <x-adminlte-button type="submit" name="submit" class="mr-auto bg-teal" label="Add Leave"/>

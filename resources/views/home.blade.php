@@ -16,4 +16,20 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-4">
+            <x-adminlte-info-box title="My Total Training Hour" text="{{ $training_hour }}" icon="fas fa-lg fa-dumbbell text-dark" theme="gradient-teal"/>
+        </div>
+        @can('view-all-employees')
+        <div class="col-4">
+            <x-adminlte-info-box title="Total Employee" text="{{ $employee_count }}" icon="fas fa-lg fa-users text-dark" theme="gradient-teal"/>
+        </div>
+        @else
+        @can('view-employees')
+        <div class="col-4">
+            <x-adminlte-info-box title="Total Employee in Department" text="{{ $department_employee_count }}" icon="fas fa-lg fa-eye text-dark" theme="gradient-teal"/>
+        </div>
+        @endcan
+        @endcan
+    </div>
 @stop

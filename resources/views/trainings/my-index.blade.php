@@ -24,9 +24,6 @@
 <div class="card">
   <div class="card-header border-bottom-0">
     <div class="card-title">
-      @can('create-users')
-        <a href="{{ route('trainings.create') }}" class="btn btn-primary">Add New Training</a>
-      @endcan
     </div>
     <div class="card-tools">
       {{ $trainings->links() }}

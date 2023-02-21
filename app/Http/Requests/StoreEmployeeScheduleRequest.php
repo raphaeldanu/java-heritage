@@ -40,4 +40,16 @@ class StoreEmployeeScheduleRequest extends FormRequest
             'workdays' => 'required|numeric|max:28'
         ];
     }
+
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'month_and_year' => Carbon::parse($this->month_and_year),
+        ]);
+    }
 }

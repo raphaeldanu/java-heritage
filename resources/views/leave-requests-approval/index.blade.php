@@ -81,19 +81,21 @@
               @endcan
               @can('delete', $item)
               <x-adminlte-button icon="fas fa-trash" data-toggle="modal" data-target="#modalDelete{{ $item->id }}" theme="danger"/>
-              <form method="post" action="{{ route('leave-requests.destroy', ['leave_request' => $item]) }}">
-                <x-adminlte-modal id="modalDelete{{ $item->id }}" title="Delete Leave Request" theme="teal"
-                    icon="fas fa-bolt" size='lg' disable-animations>
-                    Are you sure you want to delete this request?
-                      @csrf @method('delete')
-                      <x-slot name="footerSlot">
-                        <x-adminlte-button type="submit" name="submit" class="mr-auto" theme="success" label="Yes"/>
-                        <x-adminlte-button theme="danger" label="No" data-dismiss="modal"/>
-                    </x-slot>
-                </x-adminlte-modal>
-              </form>
               @endcan
           </div>
+          @can('delete', $item)
+          <form method="post" action="{{ route('leave-requests.destroy', ['leave_request' => $item]) }}">
+            <x-adminlte-modal id="modalDelete{{ $item->id }}" title="Delete Leave Request" theme="teal"
+                icon="fas fa-bolt" size='lg' disable-animations>
+                Are you sure you want to delete this request?
+                  @csrf @method('delete')
+                  <x-slot name="footerSlot">
+                    <x-adminlte-button type="submit" name="submit" class="mr-auto" theme="success" label="Yes"/>
+                    <x-adminlte-button theme="danger" label="No" data-dismiss="modal"/>
+                </x-slot>
+            </x-adminlte-modal>
+          </form>
+          @endcan
           </td>
         </tr>
         @endforeach 

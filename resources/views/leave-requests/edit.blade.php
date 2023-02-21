@@ -30,14 +30,14 @@
     <x-adminlte-select2 name="leave_type" label="Leave Type" enable-old-support>
       <x-adminlte-options empty-option="Select leave type" :options="$types" :selected="$leaveRequest->leave_type->value"/>
     </x-adminlte-select2>
-    <x-adminlte-input-date name="start_date" label="Start Date" :config="$dateConfig" placeholder="Choose start date" enable-old-support value="{{ $leaveRequest->start_date }}">
+    <x-adminlte-input-date name="start_date" label="Start Date" :config="$dateConfig" placeholder="Choose start date" enable-old-support value="{{ date_format($leaveRequest->start_date, 'Y-m-d') }}">
       <x-slot name="appendSlot">
         <div class="input-group-text bg-dark">
           <i class="fas fa-calendar-day"></i>
         </div>
       </x-slot>
     </x-adminlte-input-date>
-    <x-adminlte-input-date name="end_date" label="End Date" :config="$dateConfig" placeholder="Choose end date (Leave it empty if only 1 day)" enable-old-support value="{{ $leaveRequest->end_date }}">
+    <x-adminlte-input-date name="end_date" label="End Date" :config="$dateConfig" placeholder="Choose end date (Leave it empty if only 1 day)" enable-old-support value="{{ date_format($leaveRequest->end_date, 'Y-m-d') }}">
       <x-slot name="appendSlot">
         <div class="input-group-text bg-dark">
           <i class="fas fa-calendar-day"></i>

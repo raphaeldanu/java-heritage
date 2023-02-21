@@ -22,7 +22,7 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-ptkp')
+      @can('create-ptkps')
         <a href="{{ route('ptkps.create') }}" class="btn btn-primary">Create New PTKP Fee</a>
       @endcan
     </div>

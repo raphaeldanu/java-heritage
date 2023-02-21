@@ -104,8 +104,7 @@ class UserController extends Controller
             'title' => "Edit User",
             'roles' => Role::all(),
             'user' => $user,
-            'user_role' => $user->role()->id,
-
+            'user_role' => $user->role()->id ?? null,
         ]);
     }
 

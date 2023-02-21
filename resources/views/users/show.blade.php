@@ -24,8 +24,10 @@
   <dl>
     <dt>Username</dt>
     <dd>{{ $user->username }}</dd>
+    @isset($role)
     <dt>Role</dt>
     <dd>{{ $role->name }}</dd>
+    @endisset
   </dl>
 </x-adminlte-card>
 @endsection

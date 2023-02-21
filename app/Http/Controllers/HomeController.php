@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\EmploymentStatus;
+use App\Models\Employee;
+use App\Models\Training;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,9 +25,28 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('home');
+        $employee_count = Employee::where('employment_status', '!=', EmploymentStatus::Resigned)->get()->count();
+        $department_employee_count = 0;
+        $training_hour = 0;
+        if (isset($request->user()->employee)) {
+            $department_employee_count = Employee::where('employment_status', '!=', EmploymentStatus::Resigned)->whereHas('position', fn($query) => $query->where('department_id', ));
+
+            $training_hour = $request->user()->employee->trainings;
+            if (isset($training_hour)) {
+                $training_hour = $training_hour->sum('training_length');
+            } else {
+                $training_hour = 0;
+            }
+
+        }
+
+        return view('home', [
+            'employee_count' => $employee_count,
+            'department_employee_count' => $department_employee_count,
+            'training_hour' => $training_hour,
+        ]);
     }
 
     public function editPassword()

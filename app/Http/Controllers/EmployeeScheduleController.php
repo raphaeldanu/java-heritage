@@ -29,12 +29,10 @@ class EmployeeScheduleController extends Controller
         if ($user->cannot('viewAny', EmployeeSchedule::class) and $user->cannot('view', EmployeeSchedule::class)) {
             return redirect()->route('home')->with('warning', 'Not Authorized');
         } 
-
-        if ($user->cannot('viewAny', EmployeeSchedule::class)) {
-            $employeeOfUser = $user->employee;
-    
-            $employees = Employee::whereHas('position', fn($query) => $query->where('department_id', $employeeOfUser->position->id))->filters(request(['search', 'department_id']))->paginate(15)->withQueryString();
-        } else {
+        
+        $employeeOfUser = $user->employee;
+        $employees = Employee::whereHas('position', fn($query) => $query->where('department_id', $employeeOfUser->position->department_id))->filters(request(['search', 'department_id']))->paginate(15)->withQueryString();
+        if ($user->can('view-all-schedules')) {
             $employees = Employee::filters(request(['search', 'department_id']))->paginate(15)->withQueryString();
         }
 

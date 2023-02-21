@@ -45,15 +45,25 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->cannot('view-employees')) {
+        if ($request->user()->cannot('view-employees') and $request->user()->cannot('view-all-employees')) {
             return redirectNotAuthorized('home');
+        }
+
+        $employees = Employee::filters(request(['search', 'department_id', 'level_id']))->with('position', 'salaryRange')->orderByRaw('position_id IS NULL DESC')->orderByRaw('salary_range_id IS NULL DESC')->orderBy('id', 'ASC')->paginate(15)->withQueryString();
+        if($request->user()->cannot('view-all-employees')){
+            $employees = Employee::filters(request(['search']))->whereHas('position', fn($query) => $query->where('department_id', $request->user()->employee->position->department_id))->with('position', 'salaryRange')->orderBy('id', 'ASC')->paginate(15)->withQueryString();
+        }
+
+        $title = 'Employees';
+        if($request->user()->cannot('view-all-employees')){
+            $title = 'Department Employees';
         }
 
         return view('employees.index', [
             'levels' => Level::all(),
-            'employees' => Employee::filters(request(['search', 'department_id', 'level_id']))->with('position', 'salaryRange')->orderByRaw('position_id IS NULL DESC')->orderByRaw('salary_range_id IS NULL DESC')->orderBy('id', 'ASC')->paginate(15)->withQueryString(),
+            'employees' => $employees,
             'departments' => Department::all(),
-            'title' => 'Employees detail',
+            'title' => $title,
         ]);
     }
 
@@ -403,7 +413,7 @@ class EmployeeController extends Controller
         }
 
         if(is_null($employee->leave)){
-            $employee->leave()->create([]);
+            $employee->leave()->create();
         }
 
         return redirect()->route('employees.show', ['employee' => $employee])->with('success', 'Employee Leave is created successfully');
@@ -423,7 +433,7 @@ class EmployeeController extends Controller
 
         return view('employees.edit-leave', [
             'title' => 'Edit Employee Leave',
-            'leave' => $leave,
+            'leave' => $employee->leave,
             'employee' => $employee,
         ]);
     }
@@ -441,8 +451,8 @@ class EmployeeController extends Controller
         }
 
         $validated = $request->validated();
-        $leave->update($validated);
-        return redirect()->route('employees.show', ['employee' => $employee]);
+        $employee->leave->update($validated);
+        return redirect()->route('employees.show', ['employee' => $employee])->with('success', 'Leave Quota Edited Successfully');
     }
 
     //RESIDENCE

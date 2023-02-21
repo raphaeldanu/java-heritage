@@ -76,6 +76,9 @@ class LeaveRequestPolicy
      */
     public function approve(User $user, LeaveRequest $leaveRequest)
     {
+        if ($leaveRequest->status != LeaveStatus::WaitingApproval){
+            return false;
+        }
         if ($user->id == $leaveRequest->employee->user_id){
             return false;
         }

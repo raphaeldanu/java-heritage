@@ -90,8 +90,8 @@ class PtkpController extends Controller
             return redirectNotAuthorized('home');
         }
 
-        return view('pkps.show', [
-            'title' => "Departments",
+        return view('ptkps.show', [
+            'title' => "PTKP Fee Detail",
             'ptkp' => $ptkp,
         ]);
     }

@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Enums\Gender;
+use App\Models\Leave;
 use App\Enums\LeaveType;
+use Carbon\CarbonPeriod;
 use App\Enums\LeaveStatus;
 use Illuminate\Support\Str;
 use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLeaveRequestRequest;
 use App\Http\Requests\UpdateLeaveRequestRequest;
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 
 class LeaveRequestController extends Controller
 {
@@ -110,8 +111,8 @@ class LeaveRequestController extends Controller
                 $days = $period->count();
             }
             
-            if ($employee->leave->annual) {
-                return back()->withInput();
+            if ($employee->leave->annual < $days) {
+                return back()->withInput()->with('danger', 'Your Leave Quota is not sufficient');
             } else {
                 $leave = $employee->leave;
                 $leave->annual = $leave->annual - $days;
@@ -201,6 +202,40 @@ class LeaveRequestController extends Controller
         }
 
         $validated = $request->validated();
+        if ($leaveRequest->leave_type != $request->leave_type and $request->leave_type == "annual"){
+            $employee = $request->user()->employee;
+            if (is_null($request->end_date)){
+                $days = 1;
+            } else {
+                $start = Carbon::parse($request->start_date);
+                $end = Carbon::parse($request->end_date);
+                $period = CarbonPeriod::create($start, $end);
+                $days = $period->count();
+            }
+            
+            if ($employee->leave->annual < $days) {
+                return back()->withInput()->with('danger', 'Your Leave Quota Is Not Sufficient');
+            } else {
+                $leave = Leave::whereBelongsTo($employee)->first();
+                $leave->annual = $leave->annual - $days;
+                $leave->save();
+            }
+        }
+
+        if ($leaveRequest->leave_type != $request->leave_type and $leaveRequest->leave_type == LeaveType::Tahunan){
+            $leave = Leave::whereBelongsTo($request->user()->employee)->first();
+            if (is_null($leaveRequest->end_date)){
+                $days = 1;
+            } else {
+                $start = Carbon::parse($leaveRequest->start_date);
+                $end = Carbon::parse($leaveRequest->end_date);
+                $period = CarbonPeriod::create($start, $end);
+                $days = $period->count();
+            }
+            $leave->annual = $leave->annual + $days;
+            $leave->save();
+        }
+
         $leaveRequest->update($validated);
 
         return redirectWithAlert('leave-requests', 'success', 'Your leave request changed successfully');

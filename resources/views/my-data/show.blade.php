@@ -276,7 +276,7 @@
     <dd>Your data is empty</dd>
   </dl>
   <div class="d-flex justify-content-center">
-    @can('create', App\Models\Employee::class)    
+    @can('create', [App\Models\Employee::class, 'my-data'])    
       <a href="{{ route('my-data.create') }}" class="btn bg-teal">Fill Data</a>
     @endcan
   </div>

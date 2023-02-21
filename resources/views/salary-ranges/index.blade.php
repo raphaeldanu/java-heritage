@@ -22,7 +22,7 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-users')
+      @can('create-salary-ranges')
         <a href="{{ route('salary-ranges.create') }}" class="btn btn-primary">Create New Salary Ranges</a>
       @endcan
     </div>

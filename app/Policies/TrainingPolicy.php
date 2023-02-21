@@ -18,7 +18,7 @@ class TrainingPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view-all-trainings');
+        return $user->can('view-all-trainings') or $user->can('view-trainings');
     }
 
     /**

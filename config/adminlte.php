@@ -368,7 +368,16 @@ return [
         ],
         [
             'header' => 'SALARY ADMINISTRATIVE',
-            'can' => ['view-levels'],
+            'can' => [
+                'view-levels',
+                'view-salary-ranges',
+                'view-all-schedules',
+                'view-schedules',
+                'view-all-ptkps',
+                'view-ptkps',
+                'view-all-salaries',
+                'view-salaries'
+            ],
         ],
         [
             'text' => 'Employee Level',
@@ -444,7 +453,7 @@ return [
         ],
         [
             'header' => 'EMPLOYEE DEVELOPMENT',
-            'can' => ['view-all-training-menus', 'view-all-training-subjects']
+            'can' => ['view-all-training-menus', 'view-all-training-subjects', 'view-all-trainings', 'view-trainings']
         ],
         [
             'text' => 'Training Menu',
@@ -464,7 +473,7 @@ return [
             'text' => 'Training Master',
             'url'  => 'trainings',
             'icon' => 'fas fa-school',
-            'can' => 'view-all-trainings',
+            'can' => ['view-all-trainings', 'view-trainings'],
             'active' => ['trainings*'],
         ],
         ['header' => 'account_settings'],

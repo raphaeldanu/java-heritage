@@ -22,7 +22,7 @@
 <div class="card">
   <div class="card-header">
     <div class="card-title">
-      @can('create-users')
+      @can('create-employees')
         <a href="{{ route('employees.pick-user') }}" class="btn btn-primary">Create New Employee</a>
       @endcan
       <a href="{{ route('employees.export-turn-over') }}" class="btn btn-primary">Export Turn Over</a>
@@ -39,6 +39,7 @@
         <div class="col-6">
           <input type="text" name="search" class="form-control" placeholder="Search Employees" value="{{ request('search') }}">
         </div>
+        @can('view-all-employees')
         @php
           $options1 = $departments->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name']] )->all();
           $selected1 = [request('department_id')];
@@ -57,6 +58,7 @@
             <x-adminlte-options empty-option="Select by level" :options="$options2" :selected="$selected2" />
         </x-adminlte-select>
         </div>
+        @endcan
         <div class="col-1">
           <x-adminlte-button type="submit" icon="fas fa-search" theme="info" class="float-right" class="btn-block"/>
         </div>
@@ -69,7 +71,9 @@
           <th style="width: 10px">#</th>
           <th>Name</th>
           <th>Position</th>
+          @can('view-all-employees')
           <th>Salary Range</th>
+          @endcan
           <th class="col-2 text-center">Action</th>
         </tr>
       </thead>
@@ -79,7 +83,9 @@
           <td>{{ $loop->iteration }}</td>
           <td>{{ $item->name }}</td>
           <td>@isset($item->position) {{ $item->position->name }} @else {{ "Empty Position" }} @endisset</td>
+          @can('view-all-employees')
           <td>@isset($item->salaryRange) {{ $item->salaryRange->name.' - '.$item->salaryRange->level->name }} @else {{ "Empty Salary Range" }} @endisset</td>
+          @endcan
           <td>
             <div class="d-flex justify-content-around align-items-center">
               <a href="{{ route('employees.show', ['employee' => $item]) }}" class="btn bg-info"><i class="fas fa-info-circle"></i></a>

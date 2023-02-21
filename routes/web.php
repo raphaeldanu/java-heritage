@@ -47,9 +47,7 @@ Auth::routes([
     'verify' => false,
 ]);
 
-Route::get('/home', function() {
-    return view('home');
-})->name('home')->middleware('auth');
+Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
 Route::get('account/change-password', [HomeController::class, 'editPassword']);
 Route::put('account/change-password', [HomeController::class, 'updatePassword'])->name('profile.update-password');

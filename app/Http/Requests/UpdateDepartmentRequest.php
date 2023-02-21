@@ -31,7 +31,7 @@ class UpdateDepartmentRequest extends FormRequest
             'name' => [
                 'required', 
                 'string', 
-                Rule::unique('departments')->whereNull('deleted_at')->ignore($this->route('department'))
+                Rule::unique('departments')->ignore($this->route('department'))
             ],
         ];
     }

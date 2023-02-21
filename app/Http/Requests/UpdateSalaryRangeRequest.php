@@ -14,7 +14,7 @@ class UpdateSalaryRangeRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->user()->cannot('update', $this->salaryRange)) {
+        if ($this->user()->cannot('update', $this->salary_range)) {
             return redirectNotAuthorized('salary-ranges');
         }
         return true;
@@ -32,7 +32,7 @@ class UpdateSalaryRangeRequest extends FormRequest
             'name' => [
                 'required',
                 'string',
-                Rule::unique('salary_ranges')->where(fn ($query) => $query->where('level_id', $this->level_id))->ignore($this->salaryRange),
+                Rule::unique('salary_ranges')->where(fn ($query) => $query->where('level_id', $this->level_id))->ignore($this->salary_range),
             ],
             'base_salary' => 'required|numeric|min:100000',
         ];

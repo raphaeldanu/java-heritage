@@ -59,7 +59,7 @@ class MyDataController extends Controller
      */
     public function create(Request $request)
     {
-        if ($request->user()->cannot('create', [Employee::class, 'my-data'])) {
+        if ($request->user()->cannot('create', [Employee::class, "my-data"])) {
             return back()->withInput()->with('warning', 'Not Authorized');
         }
 

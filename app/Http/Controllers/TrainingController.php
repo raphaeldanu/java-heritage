@@ -38,9 +38,19 @@ class TrainingController extends Controller
         
         $subjects = TrainingSubject::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['subject']] )->all();
 
+        $trainings = Training::filters(request(['training_date', 'training_menu_id', 'training_subject_id', 'department_id']))->orderBy('id', 'desc')->paginate(15)->withQueryString();
+        if ($request->user()->cannot('view-all-trainings')){
+            $trainings = Training::filters(request(['training_date', 'training_menu_id', 'training_subject_id']))->whereHas('trainingMenu', fn($query) => $query->where('department_id', null)->orWhere('department_id', $request->user()->employee->position->department_id))->orderBy('id', 'desc')->paginate(15)->withQueryString();
+        }
+
+        $title = "Trainings";
+        if ($request->user()->cannot('view-all-trainings')){
+            $title = "Department Trainings";
+        }
+
         return view('trainings.index', [
-            'title' => 'Training',
-            'trainings' => Training::filters(request(['training_date', 'training_menu_id', 'training_subject_id', 'department_id']))->orderBy('id', 'desc')->paginate(15)->withQueryString(),
+            'title' => $title,
+            'trainings' => $trainings,
             'menus' => $menus,
             'subjects' => $subjects,
             'departments' => $departments,
@@ -89,6 +99,10 @@ class TrainingController extends Controller
         }
 
         $menus = TrainingMenu::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['title'].' - '.$item['trainingSubject']['subject']] )->all();
+
+        if ($request->user()->cannot('view-all-trainings')){
+            $menus = TrainingMenu::where('department_id', null)->orWhere('department_id', $request->user()->employee->position->department_id)->get()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['title'].' - '.$item['trainingSubject']['subject']] )->all();
+        }
 
         $dateConfig = [
             'format' => 'YYYY-MM-DD'
