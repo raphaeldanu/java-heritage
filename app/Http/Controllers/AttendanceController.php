@@ -14,7 +14,8 @@ use App\Http\Requests\UpdateAttendanceRequest;
 
 class AttendanceController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
@@ -27,11 +28,16 @@ class AttendanceController extends Controller
     {
         if ($request->user()->cannot('viewAny', Attendance::class)) {
             return redirectNotAuthorized('home');
-        } 
+        }
 
-        $employees = Employee::has('attendances')->filters(request(['search', 'department_id']))->with('department')->orderBy('id', 'ASC')->paginate(15)->withQueryString();
+        $employees = Employee::has('attendances')
+            ->filters(request(['search', 'department_id']))
+            ->with('department')
+            ->orderBy('id', 'ASC')
+            ->paginate(15)
+            ->withQueryString();
 
-        $departments = Department::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name']] )->all();
+        $departments = Department::all()->mapWithKeys(fn ($item, $key) => [$item['id'] => $item['name']])->all();
 
         return view('attendances.index', [
             'title' => "Attendances History",
@@ -78,14 +84,16 @@ class AttendanceController extends Controller
      */
     public function showByEmployee(Request $request, Employee $employee)
     {
-        if ($request->user()->cannot('view-attendances')){
+        if ($request->user()->cannot('view-attendances')) {
             return redirectNotAuthorized('attendances');
         }
 
-        $attendances = Attendance::whereBelongsTo($employee)->orderBy('id', 'desc')->paginate(15);
+        $attendances = Attendance::whereBelongsTo($employee)
+            ->orderBy('id', 'desc')
+            ->paginate(15);
 
         return view('attendances.show-per-employee', [
-            'title' => 'Attendances of '.Str::before($employee->name, ' '),
+            'title' => 'Attendances of ' . Str::before($employee->name, ' '),
             'attendances' => $attendances,
             'employee' => $employee,
         ]);
@@ -101,7 +109,9 @@ class AttendanceController extends Controller
     {
         $employee = $request->user()->employee;
 
-        $attendances = Attendance::whereBelongsTo($employee)->orderBy('id', 'desc')->paginate(15);
+        $attendances = Attendance::whereBelongsTo($employee)
+            ->orderBy('id', 'desc')
+            ->paginate(15);
 
         return view('attendances.my-index', [
             'title' => 'My Attendances',
