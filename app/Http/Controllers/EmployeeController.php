@@ -15,6 +15,7 @@ use App\Models\SalaryRange;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Enums\EmploymentStatus;
+use App\Models\ResidenceAddress;
 use Illuminate\Support\Facades\DB;
 use App\Exports\EmployeeRatioExport;
 use App\Exports\MonthlyDailyWorkerExport;
@@ -49,13 +50,25 @@ class EmployeeController extends Controller
             return redirectNotAuthorized('home');
         }
 
-        $employees = Employee::filters(request(['search', 'department_id', 'level_id']))->with('position', 'salaryRange')->orderByRaw('position_id IS NULL DESC')->orderByRaw('salary_range_id IS NULL DESC')->orderBy('id', 'ASC')->paginate(15)->withQueryString();
-        if($request->user()->cannot('view-all-employees')){
-            $employees = Employee::filters(request(['search']))->whereHas('position', fn($query) => $query->where('department_id', $request->user()->employee->position->department_id))->with('position', 'salaryRange')->orderBy('id', 'ASC')->paginate(15)->withQueryString();
+        $employees = Employee::filters(request(['search', 'department_id', 'level_id']))
+            ->with('position', 'salaryRange')
+            ->orderByRaw('position_id IS NULL DESC')
+            ->orderByRaw('salary_range_id IS NULL DESC')
+            ->orderBy('id', 'ASC')
+            ->paginate(15)
+            ->withQueryString();
+
+        if ($request->user()->cannot('view-all-employees')) {
+            $employees = Employee::filters(request(['search']))
+                ->whereHas('position', fn ($query) => $query->where('department_id', $request->user()->employee->position->department_id))
+                ->with('position', 'salaryRange')
+                ->orderBy('id', 'ASC')
+                ->paginate(15)
+                ->withQueryString();
         }
 
         $title = 'Employees';
-        if($request->user()->cannot('view-all-employees')){
+        if ($request->user()->cannot('view-all-employees')) {
             $title = 'Department Employees';
         }
 
@@ -76,7 +89,7 @@ class EmployeeController extends Controller
     {
         if ($request->user()->cannot('create-employees')) {
             return redirectNotAuthorized('employees');
-        } 
+        }
 
         return view('employees.pick-user', [
             'title' => "Create Employee",
@@ -99,29 +112,29 @@ class EmployeeController extends Controller
 
         $statusPajak = [];
         foreach ($taxStatus as $item) {
-        $statusPajak[$item->value] = Str::headline($item->name);
+            $statusPajak[$item->value] = Str::headline($item->name);
         }
 
         $gender = [];
         foreach (Gender::cases() as $item) {
-        $gender[$item->value] = $item->name;
+            $gender[$item->value] = $item->name;
         }
 
         $employment_status = [];
-        foreach(EmploymentStatus::cases() as $item){
+        foreach (EmploymentStatus::cases() as $item) {
             $employment_status[$item->value] = $item->name;
         }
 
         $dateConfig = [
-          'format' => 'YYYY-MM-DD'
+            'format' => 'YYYY-MM-DD'
         ];
         $lastContractEndDateConfig = [
-          'format' => 'YYYY-MM-DD',
-          'minDate' => "js:moment().add(1, 'month')",
+            'format' => 'YYYY-MM-DD',
+            'minDate' => "js:moment().add(1, 'month')",
         ];
         $birthDateConfig = [
-          'format' => 'YYYY-MM-DD',
-          'maxDate' => "js:moment().subtract(17, 'year')",
+            'format' => 'YYYY-MM-DD',
+            'maxDate' => "js:moment().subtract(17, 'year')",
         ];
         $bloodTypes = [
             'A' => "A",
@@ -133,8 +146,8 @@ class EmployeeController extends Controller
         return view('employees.create', [
             'title' => 'Create New Employee',
             'user' => $user,
-            'positions' => Position::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name'].' - '.$item['department']['name']] )->all(),
-            'salaryRanges' => SalaryRange::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name'].' - '.$item['level']['name']] )->all(),
+            'positions' => Position::all()->mapWithKeys(fn ($item, $key) => [$item['id'] => $item['name'] . ' - ' . $item['department']['name']])->all(),
+            'salaryRanges' => SalaryRange::all()->mapWithKeys(fn ($item, $key) => [$item['id'] => $item['name'] . ' - ' . $item['level']['name']])->all(),
             'genders' => $gender,
             'statusPajak' => $statusPajak,
             'dateConfig' => $dateConfig,
@@ -165,12 +178,12 @@ class EmployeeController extends Controller
         $newEmployees = Employee::create($validated);
         $newEmployees->leave()->create();
 
-        if (! $newEmployees) {
+        if (!$newEmployees) {
             return back()->withInput()->with('danger', 'Failed to save new position');
         }
         return redirectWithAlert('employees', 'success', 'New Employee Detail saved successfully');
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -179,10 +192,10 @@ class EmployeeController extends Controller
      */
     public function show(Request $request, Employee $employee)
     {
-        if($request->user()->cannot('view', $employee)){
+        if ($request->user()->cannot('view', $employee)) {
             return redirectNotAuthorized('employees');
         }
-        
+
         $employee = Employee::with([
             'user',
             'position',
@@ -190,7 +203,6 @@ class EmployeeController extends Controller
             'residence',
             'families',
             'leave',
-            
         ])->find($employee->id);
 
         if (isset($employee->last_contract_end)) {
@@ -222,29 +234,29 @@ class EmployeeController extends Controller
 
         $statusPajak = [];
         foreach ($taxStatus as $item) {
-        $statusPajak[$item->value] = Str::headline($item->name);
+            $statusPajak[$item->value] = Str::headline($item->name);
         }
 
         $gender = [];
         foreach (Gender::cases() as $item) {
-        $gender[$item->value] = $item->name;
+            $gender[$item->value] = $item->name;
         }
 
         $employment_status = [];
-        foreach(EmploymentStatus::cases() as $item){
+        foreach (EmploymentStatus::cases() as $item) {
             $employment_status[$item->value] = $item->name;
         }
 
         $dateConfig = [
-          'format' => 'YYYY-MM-DD'
+            'format' => 'YYYY-MM-DD'
         ];
         $lastContractEndDateConfig = [
-          'format' => 'YYYY-MM-DD',
-          'minDate' => "js:moment().add(1, 'month')",
+            'format' => 'YYYY-MM-DD',
+            'minDate' => "js:moment().add(1, 'month')",
         ];
         $birthDateConfig = [
-          'format' => 'YYYY-MM-DD',
-          'maxDate' => "js:moment().subtract(17, 'year')",
+            'format' => 'YYYY-MM-DD',
+            'maxDate' => "js:moment().subtract(17, 'year')",
         ];
         $bloodTypes = [
             'A' => "A",
@@ -258,8 +270,8 @@ class EmployeeController extends Controller
         return view('employees.edit', [
             'title' => 'Edit Employee',
             'employee' => $employee,
-            'positions' => Position::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name'].' - '.$item['department']['name']] )->all(),
-            'salaryRanges' => SalaryRange::all()->mapWithKeys( fn($item, $key) => [$item['id'] => $item['name'].' - '.$item['level']['name']] )->all(),
+            'positions' => Position::all()->mapWithKeys(fn ($item, $key) => [$item['id'] => $item['name'] . ' - ' . $item['department']['name']])->all(),
+            'salaryRanges' => SalaryRange::all()->mapWithKeys(fn ($item, $key) => [$item['id'] => $item['name'] . ' - ' . $item['level']['name']])->all(),
             'genders' => $gender,
             'statusPajak' => $statusPajak,
             'dateConfig' => $dateConfig,
@@ -287,22 +299,22 @@ class EmployeeController extends Controller
             'npwp_number',
         ];
         $validated = $request->safe()->except($uniqueColumn);
-        
-        foreach($uniqueColumn as $item){
-            if($employee->$item != $request->$item){
+
+        foreach ($uniqueColumn as $item) {
+            if ($employee->$item != $request->$item) {
                 $validated[$item] = $request->$item;
             }
         }
 
-        if ($employee->employment_status != $request->employment_status and $request->employment_status == EmploymentStatus::Resigned){
+        if ($employee->employment_status != $request->employment_status and $request->employment_status == EmploymentStatus::Resigned) {
             $validated['resign_date'] = DB::raw('CURRENT_TIMESTAMP');
         }
 
-        if ($employee->employment_status != $request->employment_status and $employee->employment_status == EmploymentStatus::Resigned){
+        if ($employee->employment_status != $request->employment_status and $employee->employment_status != EmploymentStatus::Resigned) {
             $validated['resign_date'] = null;
         }
 
-        if($employee->update($validated)){
+        if ($employee->update($validated)) {
             return redirectWithAlert('employees', 'success', 'Employee Updated Successfully');
         }
 
@@ -322,7 +334,7 @@ class EmployeeController extends Controller
             return redirectNotAuthorized('employees');
         }
 
-        if(!$employee->delete()){
+        if (!$employee->delete()) {
             return redirectWithAlert('employees', 'danger', "Failed to delete employee detail");
         }
 
@@ -343,7 +355,7 @@ class EmployeeController extends Controller
 
         $dateConfig = [
             'format' => 'YYYY-MM'
-          ];
+        ];
 
         return view('employees.pick-date-export', [
             'title' => 'Export Turn Over Employee',
@@ -362,11 +374,30 @@ class EmployeeController extends Controller
         $departments = Department::all();
         $data = [];
         foreach ($departments as $item) {
-            $male_permanent = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('gender', Gender::Male)->where('employment_status', EmploymentStatus::Permanent)->count();
-            $female_permanent = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('gender', Gender::Female)->where('employment_status', EmploymentStatus::Permanent)->count();
-            $male_contract = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('gender', Gender::Male)->where('employment_status', EmploymentStatus::Contract)->count();
-            $female_contract = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('gender', Gender::Female)->where('employment_status', EmploymentStatus::Contract)->count();
-            $daily_worker = Employee::whereHas('position', fn($query) => $query->where('department_id', $item->id))->where('employment_status', EmploymentStatus::DailyWorker)->count();
+            $male_permanent = Employee::whereHas('position', fn ($query) => $query->where('department_id', $item->id))
+                ->where('gender', Gender::Male)
+                ->where('employment_status', EmploymentStatus::Permanent)
+                ->count();
+
+            $female_permanent = Employee::whereHas('position', fn ($query) => $query->where('department_id', $item->id))
+                ->where('gender', Gender::Female)
+                ->where('employment_status', EmploymentStatus::Permanent)
+                ->count();
+
+            $male_contract = Employee::whereHas('position', fn ($query) => $query->where('department_id', $item->id))
+                ->where('gender', Gender::Male)
+                ->where('employment_status', EmploymentStatus::Contract)
+                ->count();
+
+            $female_contract = Employee::whereHas('position', fn ($query) => $query->where('department_id', $item->id))
+                ->where('gender', Gender::Female)
+                ->where('employment_status', EmploymentStatus::Contract)
+                ->count();
+
+            $daily_worker = Employee::whereHas('position', fn ($query) => $query->where('department_id', $item->id))
+                ->where('employment_status', EmploymentStatus::DailyWorker)
+                ->count();
+
             array_push($data, collect([
                 'name' => $item->name,
                 'male_permanent' => $male_permanent,
@@ -374,7 +405,7 @@ class EmployeeController extends Controller
                 'male_contract' => $male_contract,
                 'female_contract' => $female_contract,
                 'daily_worker' => $daily_worker,
-                'total' => $male_permanent+$female_permanent+$male_contract+$female_contract+$daily_worker,
+                'total' => $male_permanent + $female_permanent + $male_contract + $female_contract + $daily_worker,
             ]));
         }
 
@@ -386,13 +417,13 @@ class EmployeeController extends Controller
         if ($request->user()->cannot('export-employees')) {
             return redirectNotAuthorized('employees');
         }
-        
+
         $type = $request->type;
         $month_and_year = Carbon::parse($request->month_and_year);
 
-        if ($type == 'hire'){
+        if ($type == 'hire') {
             return (new MonthlyEmployeeHireExport($month_and_year))->download('employee-hire.xlsx');
-        } elseif ($type == 'resign'){
+        } elseif ($type == 'resign') {
             return (new MonthlyEmployeeResignExport($month_and_year))->download('employee-resign.xlsx');
         } elseif ($type == 'daily_worker') {
             return (new MonthlyDailyWorkerExport($month_and_year))->download('daily-worker.xlsx');
@@ -408,11 +439,11 @@ class EmployeeController extends Controller
      */
     public function addLeave(Request $request, Employee $employee)
     {
-        if($request->user()->cannot('create-employees')){
+        if ($request->user()->cannot('create-employees')) {
             return redirect()->route('employees.show', ['employee' => $employee])->with('warning', 'Not Authorized');
         }
 
-        if(is_null($employee->leave)){
+        if (is_null($employee->leave)) {
             $employee->leave()->create();
         }
 
@@ -427,7 +458,7 @@ class EmployeeController extends Controller
      */
     public function editLeave(Request $request, Employee $employee, Leave $leave)
     {
-        if($request->user()->cannot('update', $leave)){
+        if ($request->user()->cannot('update', $leave)) {
             return redirect()->route('employees.show', ['employee' => $employee])->with('warning', 'Not Authorized');
         }
 
@@ -446,7 +477,7 @@ class EmployeeController extends Controller
      */
     public function updateLeave(UpdateLeaveRequest $request, Employee $employee, Leave $leave)
     {
-        if($request->user()->cannot('update', $leave)){
+        if ($request->user()->cannot('update', $leave)) {
             return redirect()->route('employees.show', ['employee' => $employee])->with('warning', 'Not Authorized');
         }
 
@@ -463,12 +494,12 @@ class EmployeeController extends Controller
      */
     public function createResidence(Request $request, Employee $employee)
     {
-        if ($request->user()->cannot('create', [ResidenceAddress::class, $employee])){
+        if ($request->user()->cannot('create', [ResidenceAddress::class, $employee])) {
             return back()->with('warning', 'Not Authorized');
         }
 
-        if ($employee->residence != null){
-            return back()->with('warning', $employee->name.' already had a residence address!');
+        if ($employee->residence != null) {
+            return back()->with('warning', $employee->name . ' already had a residence address!');
         }
 
         return view('employees.create-residence', [
@@ -487,12 +518,12 @@ class EmployeeController extends Controller
     public function storeResidence(StoreResidenceAddressRequest $request, Employee $employee)
     {
         $validated = $request->validated();
-        if($employee->residence != null){
-            return redirect()->route('employees.show', ['employee' => $employee])->with('warning', $employee->name.' already have a residence address!'); 
+        if ($employee->residence != null) {
+            return redirect()->route('employees.show', ['employee' => $employee])->with('warning', $employee->name . ' already have a residence address!');
         }
         $employee->residence()->create($validated);
         $newResidence = $employee->residence;
-        
+
         return redirect()->route('employees.show', ['employee' => $employee])->with('success', 'Residence Address added successfully');
     }
 
@@ -504,7 +535,7 @@ class EmployeeController extends Controller
      */
     public function editResidence(Request $request, Employee $employee)
     {
-        if ($request->user()->cannot('update', [$employee->residence, $employee])){
+        if ($request->user()->cannot('update', [$employee->residence, $employee])) {
             return back()->with('warning', 'Not Authorized');
         }
 
@@ -539,7 +570,7 @@ class EmployeeController extends Controller
      */
     public function destroyResidence(Request $request, Employee $employee)
     {
-        if ($request->user()->cannot('delete', [$employee->residence, $employee])){
+        if ($request->user()->cannot('delete', [$employee->residence, $employee])) {
             return back()->with('warning', 'Not Authorized');
         }
 
