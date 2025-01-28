@@ -49,7 +49,7 @@ Auth::routes([
 
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
-Route::get('account/change-password', [HomeController::class, 'editPassword']);
+Route::get('account/change-password', [HomeController::class, 'editPassword'])->name('profile.edit-password');
 Route::put('account/change-password', [HomeController::class, 'updatePassword'])->name('profile.update-password');
 
 // Users Routes
@@ -57,22 +57,20 @@ Route::put('users/{user}/change-status', [UserController::class, 'changeStatus']
 Route::put('users/{user}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
 
 //Employees
-Route::controller(EmployeeController::class)->group(function () {
-    Route::name('employees.')->prefix('employees')->group(function () {
-        Route::get('/pick-user/', 'pickUser')->name('pick-user');
-        Route::get('/export-turn-over', 'exportTurnOver')->name('export-turn-over');
-        Route::get('/export-ratio', 'exportRatio')->name('export-ratio');
-        Route::post('/export-turn-over', 'export')->name('export');
-        Route::get('/create/{user}', 'create')->name('create');
-        Route::post('/{employee}/leave', 'addLeave')->name('add-leave');
-        Route::put('/{employee}/leave/', 'updateLeave')->name('update-leave');
-        Route::get('/{employee}/leave/edit', 'editLeave')->name('edit-leave');
-        Route::get('/{employee}/residence/create', 'createResidence')->name('create-residence');
-        Route::post('/{employee}/residence', 'storeResidence')->name('store-residence');
-        Route::put('/{employee}/residence', 'updateResidence')->name('update-residence');
-        Route::get('/{employee}/residence/edit', 'editResidence')->name('edit-residence');
-        Route::delete('/{employee}/residence', 'destroyResidence')->name('destroy-residence');
-    });
+Route::controller(EmployeeController::class)->prefix('employees')->group(function () {
+    Route::get('/pick-user', 'pickUser')->name('employees.pick-user');
+    Route::get('/export-turn-over', 'exportTurnOver')->name('employees.export-turn-over');
+    Route::get('/export-ratio', 'exportRatio')->name('employees.export-ratio');
+    Route::post('/export-turn-over', 'export')->name('employees.export');
+    Route::get('/create/{user}', 'create')->name('employees.create');
+    Route::post('/{employee}/leave', 'addLeave')->name('employees.add-leave');
+    Route::put('/{employee}/leave/', 'updateLeave')->name('employees.update-leave');
+    Route::get('/{employee}/leave/edit', 'editLeave')->name('employees.edit-leave');
+    Route::get('/{employee}/residence/create', 'createResidence')->name('employees.create-residence');
+    Route::post('/{employee}/residence', 'storeResidence')->name('employees.store-residence');
+    Route::put('/{employee}/residence', 'updateResidence')->name('employees.update-residence');
+    Route::get('/{employee}/residence/edit', 'editResidence')->name('employees.edit-residence');
+    Route::delete('/{employee}/residence', 'destroyResidence')->name('employees.destroy-residence');
 });
 
 Route::resource('employees', EmployeeController::class)->except('create');
@@ -86,44 +84,40 @@ Route::controller(ResidenceAddressController::class)->group(function () {
 
 //Families
 Route::controller(FamilyController::class)->group(function () {
-    Route::name('families.')->prefix('employees')->group(function () {
-        Route::get('/{employee}/families/create', 'create')->name('create');
-        Route::post('/{employee}/families', 'store')->name('store');
-        Route::get('/{employee}/families/{family}', 'show')->name('show');
-        Route::get('/{employee}/families/{family}/edit', 'edit')->name('edit');
-        Route::put('/{employee}/families/{family}', 'update')->name('update');
-        Route::delete('/{employee}/families/{family}', 'destroy')->name('destroy');
+    Route::prefix('employees')->group(function () {
+        Route::get('/{employee}/families/create', 'create')->name('families.create');
+        Route::post('/{employee}/families', 'store')->name('families.store');
+        Route::get('/{employee}/families/{family}', 'show')->name('families.show');
+        Route::get('/{employee}/families/{family}/edit', 'edit')->name('families.edit');
+        Route::put('/{employee}/families/{family}', 'update')->name('families.update');
+        Route::delete('/{employee}/families/{family}', 'destroy')->name('families.destroy');
     });
 
-    Route::name('my-data.')->prefix('my-data/families')->group(function () {
-        Route::get('/create', 'createForUser')->name('create-family');
-        Route::post('/', 'storeForUser')->name('store-family');
-        Route::get('/{family}', 'showForUser')->name('show-family');
-        Route::get('/{family}/edit', 'editForUser')->name('edit-family');
-        Route::put('/{family}', 'updateForUser')->name('update-family');
-        Route::delete('/{family}', 'destroyForUser')->name('destroy-family');
+    Route::prefix('my-data/families')->group(function () {
+        Route::get('/create', 'createForUser')->name('my-data.create-family');
+        Route::post('/', 'storeForUser')->name('my-data.store-family');
+        Route::get('/{family}', 'showForUser')->name('my-data.show-family');
+        Route::get('/{family}/edit', 'editForUser')->name('my-data.edit-family');
+        Route::put('/{family}', 'updateForUser')->name('my-data.update-family');
+        Route::delete('/{family}', 'destroyForUser')->name('my-data.destroy-family');
     });
 });
 
-Route::controller(MyDataController::class)->group(function () {
-    Route::name('my-data.')->prefix('my-data/residence')->group(function () {
-        Route::get('/create', 'createResidence')->name('create-residence');
-        Route::post('/', 'storeResidence')->name('store-residence');
-        Route::put('/', 'updateResidence')->name('update-residence');
-        Route::get('/edit', 'editResidence')->name('edit-residence');
-        Route::delete('/', 'destroyResidence')->name('destroy-residence');
-    });
+Route::controller(MyDataController::class)->prefix('my-data/residence')->group(function () {
+    Route::get('/create', 'createResidence')->name('my-data.create-residence');
+    Route::post('/', 'storeResidence')->name('my-data.store-residence');
+    Route::put('/', 'updateResidence')->name('my-data.update-residence');
+    Route::get('/edit', 'editResidence')->name('my-data.edit-residence');
+    Route::delete('/', 'destroyResidence')->name('my-data.destroy-residence');
 });
 
-Route::controller(MyDataController::class)->group(function () {
-    Route::name('my-data.')->prefix('my-data')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
-        Route::put('/', 'update')->name('update');
-        Route::get('/edit', 'edit')->name('edit');
-        Route::delete('/', 'destroy')->name('destroy');
-    });
+Route::controller(MyDataController::class)->prefix('my-data')->group(function () {
+    Route::get('/', 'index')->name('my-data.index');
+    Route::get('/create', 'create')->name('my-data.create');
+    Route::post('/', 'store')->name('my-data.store');
+    Route::put('/', 'update')->name('my-data.update');
+    Route::get('/edit', 'edit')->name('my-data.edit');
+    Route::delete('/', 'destroy')->name('my-data.destroy');
 });
 
 Route::resource('approve-leave-requests', LeaveApprovalController::class)
@@ -132,50 +126,46 @@ Route::resource('approve-leave-requests', LeaveApprovalController::class)
 
 
 Route::controller(TrainingController::class)->group(function () {
-    Route::name('trainings.')->prefix('trainings')->group(function () {
-        Route::get('/{training}/attendant', 'addAttendant')->name('add-attendants');
-        Route::get('/{training}/edit/attendant', 'addAttendant')->name('edit-attendants');
-        Route::post('/{training}/attendant/{employee}', 'storeAttendant')->name('store-attendants');
-        Route::put('/{training}/attendant/{employee}', 'removeAttendant')->name('remove-attendants');
-        Route::post('/{training}/edit/attendant/{employee}', 'storeAttendant')->name('store-edit-attendants');
-        Route::put('/{training}/edit/attendant/{employee}', 'removeAttendant')->name('remove-edit-attendants');
+    Route::prefix('trainings')->group(function () {
+        Route::get('/{training}/attendant', 'addAttendant')->name('trainings.add-attendants');
+        Route::get('/{training}/edit/attendant', 'addAttendant')->name('trainings.edit-attendants');
+        Route::post('/{training}/attendant/{employee}', 'storeAttendant')->name('trainings.store-attendants');
+        Route::put('/{training}/attendant/{employee}', 'removeAttendant')->name('trainings.remove-attendants');
+        Route::post('/{training}/edit/attendant/{employee}', 'storeAttendant')->name('trainings.store-edit-attendants');
+        Route::put('/{training}/edit/attendant/{employee}', 'removeAttendant')->name('trainings.remove-edit-attendants');
     });
-    Route::name('my-trainings.')->prefix('my-trainings')->group(function () {
-        Route::get('/', 'myIndex')->name('index');
-        Route::get('/{training}', 'myShow')->name('show');
+    Route::prefix('my-trainings')->group(function () {
+        Route::get('/', 'myIndex')->name('my-trainings.index');
+        Route::get('/{training}', 'myShow')->name('my-trainings.show');
     });
 });
 
 Route::controller(AttendanceController::class)->group(function () {
-    Route::name('attendances.')->prefix('attendances')->group(function () {
-        Route::get('/import', 'create')->name('import');
-        Route::post('/import', 'store')->name('store');
-        Route::get('/{employee}', 'showByEmployee')->name('show-by-employee');
+    Route::prefix('attendances')->group(function () {
+        Route::get('/import', 'create')->name('attendances.import');
+        Route::post('/import', 'store')->name('attendances.store');
+        Route::get('/{employee}', 'showByEmployee')->name('attendances.show-by-employee');
     });
-    Route::name('my-attendances.')->group(function () {
-        Route::get('my-attendances', 'myIndex')->name('index');
-    });
+
+    Route::get('my-attendances', 'myIndex')->name('my-attendances.index');
 });
 
 Route::resource('attendances', AttendanceController::class)->only(['index']);
 
 Route::controller(EmployeeScheduleController::class)->group(function () {
-    Route::name('schedules.')->prefix('schedules/of')->group(function () {
-        Route::get('/{employee}', 'showByEmployee')->name('show-by-employee');
-        Route::get('/{employee}/create', 'create')->name('create');
+    Route::prefix('schedules/of')->group(function () {
+        Route::get('/{employee}', 'showByEmployee')->name('schedules.show-by-employee');
+        Route::get('/{employee}/create', 'create')->name('schedules.create');
     });
-    Route::name('my-schedules.')->group(function () {
-        Route::get('my-schedules', 'myIndex')->name('index');
-    });
+
+    Route::get('my-schedules', 'myIndex')->name('my-schedules.index');
 });
 
-Route::controller(SalaryController::class)->group(function () {
-    Route::name('salaries.')->prefix('salaries')->group(function () {
-        Route::get('/of/{employee}', 'showByEmployee')->name('show-by-employee');
-        Route::get('/of/{employee}/create', 'createByEmployee')->name('create-by-employee');
-        Route::get('/check-workdays', 'checkWorkdays')->name('check-workdays');
-        Route::get('/{salary}/export', 'export')->name('export');
-    });
+Route::controller(SalaryController::class)->prefix('salaries')->group(function () {
+    Route::get('/of/{employee}', 'showByEmployee')->name('salaries.show-by-employee');
+    Route::get('/of/{employee}/create', 'createByEmployee')->name('salaries.create-by-employee');
+    Route::get('/check-workdays', 'checkWorkdays')->name('salaries.check-workdays');
+    Route::get('/{salary}/export', 'export')->name('salaries.export');
 });
 
 Route::resource('schedules', EmployeeScheduleController::class)->parameters([
@@ -196,5 +186,4 @@ Route::resources([
     'training-menus' => TrainingMenuController::class,
     'trainings' => TrainingController::class,
     'ptkps' => PtkpController::class,
-
 ]);
