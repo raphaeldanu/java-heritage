@@ -24,31 +24,31 @@ class DatabaseSeeder extends Seeder
 
         $user = User::create([
             'username' => 'raphaeldanu',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('op[kl;m,.'),
             'active' => 1
         ]);
 
         $user2 = User::create([
             'username' => 'mariahelga',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('op[kl;m,.'),
             'active' => 1
         ]);
 
         $user3 = User::create([
             'username' => 'wahyunug',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('op[kl;m,.'),
             'active' => 1
         ]);
 
         $user4 = User::create([
             'username' => 'herwindosat',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('op[kl;m,.'),
             'active' => 1
         ]);
 
         $user5 = User::create([
             'username' => 'satriobag',
-            'password' => Hash::make('12345678'),
+            'password' => Hash::make('op[kl;m,.'),
             'active' => 1
         ]);
 

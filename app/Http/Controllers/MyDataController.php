@@ -10,6 +10,7 @@ use App\Models\SalaryRange;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Enums\EmploymentStatus;
+use App\Models\ResidenceAddress;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use sirajcse\UniqueIdGenerator\UniqueIdGenerator;
@@ -220,7 +221,7 @@ class MyDataController extends Controller
             'npwp_number',
         ];
         $validated = $request->safe()->except($uniqueColumn);
-        
+
         foreach($uniqueColumn as $item){
             if($employee->$item != $request->$item){
                 $validated[$item] = $request->$item;
@@ -269,7 +270,7 @@ class MyDataController extends Controller
         $employee = $request->user()->employee;
         $validated = $request->validated();
         if($employee->residence != null){
-            return redirect()->route('my-data.index')->with('warning', 'You already have a residence address!'); 
+            return redirect()->route('my-data.index')->with('warning', 'You already have a residence address!');
         }
         $employee->residence()->create($validated);
 
